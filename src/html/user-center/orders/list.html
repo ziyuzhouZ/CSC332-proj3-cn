@@ -1,0 +1,128 @@
+<!-- 订单列表页面 -->
+<div class="orders-container">
+    <!-- 订单筛选 -->
+    <div class="orders-filter">
+        <div class="filter-tabs">
+            <button class="tab-item active" data-status="all">全部订单</button>
+            <button class="tab-item" data-status="pending">待付款</button>
+            <button class="tab-item" data-status="processing">待发货</button>
+            <button class="tab-item" data-status="shipped">待收货</button>
+            <button class="tab-item" data-status="completed">已完成</button>
+            <button class="tab-item" data-status="cancelled">已取消</button>
+        </div>
+
+        <div class="filter-actions">
+            <div class="search-box">
+                <input type="text" id="orderSearch" placeholder="输入订单号搜索">
+                <button class="btn-search">
+                    <i class="icon-search"></i>
+                </button>
+            </div>
+
+            <div class="date-filter">
+                <input type="date" id="startDate">
+                <span>至</span>
+                <input type="date" id="endDate">
+            </div>
+        </div>
+    </div>
+
+    <!-- 订单列表 -->
+    <div class="orders-list">
+        <!-- 订单项模板 -->
+        <template id="orderTemplate">
+            <div class="order-item">
+                <div class="order-header">
+                    <div class="order-info">
+                        <span class="order-time"></span>
+                        <span class="order-number"></span>
+                    </div>
+                    <div class="order-status"></div>
+                </div>
+
+                <div class="order-content">
+                    <div class="product-list">
+                        <!-- 商品列表将动态插入 -->
+                    </div>
+                    <div class="order-summary">
+                        <div class="price-info">
+                            <span>共 <span class="product-count"></span> 件商品</span>
+                            <span>实付款：<span class="total-price"></span></span>
+                        </div>
+                        <div class="order-actions">
+                            <!-- 按钮将根据订单状态动态显示 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- 订单列表将动态加载 -->
+        <div id="ordersList"></div>
+
+        <!-- 加载更多 -->
+        <div class="load-more" id="loadMore" hidden>
+            <button class="btn-load-more">
+                <span>加载更多</span>
+                <div class="loading-spinner"></div>
+            </button>
+        </div>
+    </div>
+
+    <!-- 空状态 -->
+    <div class="empty-state" id="emptyState" hidden>
+        <img src="../../public/images/empty-orders.svg" alt="暂无订单">
+        <p>暂无相关订单</p>
+        <a href="../shop.html" class="btn-primary">去购物</a>
+    </div>
+</div>
+
+<!-- 取消订单确认框 -->
+<div class="modal" id="cancelModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>取消订单</h3>
+            <button class="btn-close" id="closeCancelModal">×</button>
+        </div>
+        <div class="modal-body">
+            <p>确定要取消该订单吗？取消后无法恢复。</p>
+            <div class="form-group">
+                <label for="cancelReason">取消原因</label>
+                <select id="cancelReason">
+                    <option value="">请选择取消原因</option>
+                    <option value="wrong_info">信息填写错误</option>
+                    <option value="change_mind">改变购买决定</option>
+                    <option value="stock_issue">商品缺货</option>
+                    <option value="other">其他原因</option>
+                </select>
+            </div>
+            <div class="form-group" id="otherReasonGroup" hidden>
+                <label for="otherReason">其他原因</label>
+                <textarea id="otherReason" rows="3" placeholder="请输入取消原因"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" id="cancelCancelBtn">取消</button>
+            <button class="btn-primary" id="confirmCancelBtn">确定</button>
+        </div>
+    </div>
+</div>
+
+<!-- 评价订单模态框 -->
+<div class="modal" id="reviewModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>评价订单</h3>
+            <button class="btn-close" id="closeReviewModal">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="review-products">
+                <!-- 商品评价表单将动态插入 -->
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" id="cancelReviewBtn">取消</button>
+            <button class="btn-primary" id="submitReviewBtn">提交评价</button>
+        </div>
+    </div>
+</div>

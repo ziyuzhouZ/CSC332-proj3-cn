@@ -1,0 +1,104 @@
+<!-- 个人资料页面 -->
+<div class="profile-container">
+    <!-- 基本信息卡片 -->
+    <div class="profile-card">
+        <div class="card-header">
+            <h3>基本信息</h3>
+            <button class="btn-edit" id="editProfileBtn">
+                <i class="icon-edit"></i>
+                <span>编辑</span>
+            </button>
+        </div>
+
+        <!-- 个人信息表单 -->
+        <form id="profileForm" class="profile-form">
+            <div class="form-group">
+                <label for="avatar">头像</label>
+                <div class="avatar-upload">
+                    <img src="../../public/images/default-avatar.png" alt="用户头像" id="avatarPreview">
+                    <input type="file" id="avatarInput" name="avatar" accept="image/*" hidden>
+                    <button type="button" class="btn-upload" id="uploadAvatarBtn">
+                        <i class="icon-camera"></i>
+                        <span>更换头像</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" name="username" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="nickname">昵称</label>
+                    <input type="text" id="nickname" name="nickname" disabled>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="email">邮箱</label>
+                    <input type="email" id="email" name="email" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="phone">手机号</label>
+                    <input type="tel" id="phone" name="phone" disabled>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="gender">性别</label>
+                    <select id="gender" name="gender" disabled>
+                        <option value="">保密</option>
+                        <option value="male">男</option>
+                        <option value="female">女</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="birthday">生日</label>
+                    <input type="date" id="birthday" name="birthday" disabled>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="bio">个人简介</label>
+                <textarea id="bio" name="bio" rows="3" disabled></textarea>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary" hidden>保存</button>
+                <button type="button" class="btn-secondary" id="cancelEditBtn" hidden>取消</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 修改历史卡片 -->
+    <div class="profile-card">
+        <div class="card-header">
+            <h3>修改历史</h3>
+        </div>
+        <div class="history-list">
+            <!-- 历史记录将通过JavaScript动态添加 -->
+        </div>
+    </div>
+</div>
+
+<!-- 头像裁剪模态框 -->
+<div class="modal" id="avatarModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>裁剪头像</h3>
+            <button class="btn-close" id="closeAvatarModal">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="cropper-container">
+                <!-- 图片裁剪区域 -->
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" id="cancelCropBtn">取消</button>
+            <button class="btn-primary" id="confirmCropBtn">确定</button>
+        </div>
+    </div>
+</div>

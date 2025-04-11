@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>门店详情 - Fashion Store</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/pages/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../js/api/admin/auth-interceptor.js"></script>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- 侧边栏 -->
+        <div class="admin-sidebar">
+            <div class="logo">
+                <img src="../../public/images/icons/logo.png" alt="Fashion Store">
+            </div>
+            <ul>
+                <li><a href="dashboard.html"><i class="icon-dashboard"></i> 控制面板</a></li>
+                <li class="active"><a href="stores.html"><i class="icon-store"></i> 门店管理</a></li>
+                <li><a href="sales.html"><i class="icon-chart"></i> 销售情况</a></li>
+                <li><a href="orders.html"><i class="icon-orders"></i> 订单管理</a></li>
+                <div class="divider"></div>
+                <li><a href="../index.html"><i class="icon-storefront"></i> 访问前台</a></li>
+                <li><a href="#" id="logoutBtn"><i class="icon-logout"></i> 退出登录</a></li>
+            </ul>
+        </div>
+
+        <!-- 内容区 -->
+        <div class="admin-content">
+            <div class="store-header">
+                <a href="stores.html" class="back-link">← 返回门店列表</a>
+                <h1 id="storeName">加载中...</h1>
+                <p id="storeAddress">地址加载中...</p>
+            </div>
+            
+            <!-- 门店信息卡片 -->
+            <div class="dashboard-cards">
+                <div class="dashboard-card">
+                    <div class="card-icon stores">
+                        <i class="icon-inventory"></i>
+                    </div>
+                    <h3>库存总量</h3>
+                    <div class="card-value" id="totalInventory">-</div>
+                    <div class="card-meta">件商品</div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-icon sales">
+                        <i class="icon-sales"></i>
+                    </div>
+                    <h3>今日销售额</h3>
+                    <div class="card-value" id="todaySales">-</div>
+                    <div class="card-meta">今日销售额</div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-icon orders">
+                        <i class="icon-products"></i>
+                    </div>
+                    <h3>商品种类</h3>
+                    <div class="card-value" id="productCount">-</div>
+                    <div class="card-meta">种不同商品</div>
+                </div>
+            </div>
+            
+            <!-- 标签页导航 -->
+            <div class="tab-nav">
+                <button id="tab-inventory" class="active">库存商品</button>
+                <button id="tab-sales">销售记录</button>
+                <button id="tab-info">门店信息</button>
+            </div>
+            
+            <!-- 库存商品标签内容 -->
+            <div id="content-inventory" class="tab-content active">
+                <div class="filter-bar">
+                    <input type="text" id="inventorySearch" placeholder="搜索商品...">
+                    <select id="inventorySortBy">
+                        <option value="name">按名称排序</option>
+                        <option value="quantity">按库存数量排序</option>
+                        <option value="price">按价格排序</option>
+                    </select>
+                </div>
+                
+                <div class="admin-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>商品名称</th>
+                                <th>SKU</th>
+                                <th>颜色</th>
+                                <th>尺寸</th>
+                                <th>价格</th>
+                                <th>库存数量</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTable">
+                            <tr>
+                                <td colspan="6">加载中...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- 销售记录标签内容 -->
+            <div id="content-sales" class="tab-content">
+                <div class="filter-bar">
+                    <select id="dateFilter">
+                        <option value="today">今天</option>
+                        <option value="week" selected>最近7天</option>
+                        <option value="month">本月</option>
+                        <option value="custom">自定义时间</option>
+                    </select>
+                    
+                    <div id="customDateRange" style="display: none;">
+                        <input type="date" id="startDate">
+                        <input type="date" id="endDate">
+                        <button id="applyDateFilter">应用</button>
+                    </div>
+                </div>
+                
+                <div class="admin-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>商品</th>
+                                <th>SKU</th>
+                                <th>数量</th>
+                                <th>销售金额</th>
+                            </tr>
+                        </thead>
+                        <tbody id="salesTable">
+                            <tr>
+                                <td colspan="5">加载中...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- 门店信息标签内容 -->
+            <div id="content-info" class="tab-content">
+                <div class="store-info-card">
+                    <div class="info-section">
+                        <h3>基本信息</h3>
+                        <table class="info-table">
+                            <tr>
+                                <th>门店名称:</th>
+                                <td id="info-name">加载中...</td>
+                            </tr>
+                            <tr>
+                                <th>详细地址:</th>
+                                <td id="info-address">加载中...</td>
+                            </tr>
+                            <tr>
+                                <th>城市:</th>
+                                <td id="info-city">加载中...</td>
+                            </tr>
+                            <tr>
+                                <th>省份:</th>
+                                <td id="info-province">加载中...</td>
+                            </tr>
+                            <tr>
+                                <th>邮编:</th>
+                                <td id="info-zipcode">加载中...</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>联系方式</h3>
+                        <table class="info-table">
+                            <tr>
+                                <th>电话:</th>
+                                <td id="info-phone">加载中...</td>
+                            </tr>
+                            <tr>
+                                <th>邮箱:</th>
+                                <td id="info-email">加载中...</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { getStoreDetails } from '../../js/modules/auth/api.js';
+        
+        document.addEventListener('DOMContentLoaded', async function() {
+            // 绑定退出登录按钮
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('admin_token');
+                localStorage.removeItem('admin_data');
+                window.location.href = 'login.html';
+            });
+            
+            // 获取门店ID
+            const urlParams = new URLSearchParams(window.location.search);
+            const storeId = urlParams.get('id');
+            
+            if (!storeId) {
+                alert('未提供门店ID');
+                window.location.href = 'stores.html';
+                return;
+            }
+            
+            // 绑定退出登录按钮
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                logout();
+                window.location.href = '../auth/login.html';
+            });
+            
+            // 标签页切换
+            document.querySelectorAll('.tab-nav button').forEach(button => {
+                button.addEventListener('click', function() {
+                    // 移除所有标签页的激活状态
+                    document.querySelectorAll('.tab-nav button').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // 隐藏所有内容
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // 激活当前标签页
+                    this.classList.add('active');
+                    
+                    // 显示对应内容
+                    const contentId = 'content-' + this.id.split('-')[1];
+                    document.getElementById(contentId).classList.add('active');
+                });
+            });
+            
+            // 初始数据
+            let storeData = null;
+            let inventoryData = [];
+            let salesData = [];
+            
+            // 日期筛选逻辑
+            document.getElementById('dateFilter').addEventListener('change', function() {
+                const value = this.value;
+                const customRange = document.getElementById('customDateRange');
+                
+                if (value === 'custom') {
+                    customRange.style.display = 'inline-block';
+                } else {
+                    customRange.style.display = 'none';
+                    loadSalesData(value);
+                }
+            });
+            
+            document.getElementById('applyDateFilter').addEventListener('click', function() {
+                const startDate = document.getElementById('startDate').value;
+                const endDate = document.getElementById('endDate').value;
+                
+                if (!startDate || !endDate) {
+                    alert('请选择开始和结束日期');
+                    return;
+                }
+                
+                loadSalesData('custom', startDate, endDate);
+            });
+            
+            // 库存搜索和排序
+            document.getElementById('inventorySearch').addEventListener('input', function() {
+                filterInventory();
+            });
+            
+            document.getElementById('inventorySortBy').addEventListener('change', function() {
+                sortInventory();
+            });
+            
+            // 加载初始数据
+            try {
+                const data = await loadStoreData(storeId, 'week');
+                storeData = data.store;
+                inventoryData = data.inventory;
+                salesData = data.sales;
+                
+                // 渲染门店基本信息
+                renderStoreInfo(storeData);
+                
+                // 渲染库存信息
+                renderInventoryTable(inventoryData);
+                
+                // 渲染销售记录
+                renderSalesTable(salesData);
+                
+                // 更新统计信息
+                document.getElementById('totalInventory').textContent = 
+                    inventoryData.reduce((sum, item) => sum + item.quantity, 0);
+                
+                document.getElementById('todaySales').textContent = 
+                    `¥${calculateTodaySales().toLocaleString()}`;
+                
+                document.getElementById('productCount').textContent = 
+                    new Set(inventoryData.map(item => item.id)).size;
+                
+            } catch (error) {
+                console.error('加载门店数据出错:', error);
+                alert('加载门店数据失败，请刷新页面重试');
+            }
+            
+            // 加载门店数据
+            async function loadStoreData(storeId, dateFilter, startDate, endDate) {
+                const data = await getStoreDetails(storeId, dateFilter, startDate, endDate);
+                
+                if (!data.success) {
+                    throw new Error('获取门店数据失败');
+                }
+                
+                return data;
+            }
+            
+            // 加载销售数据
+            async function loadSalesData(dateFilter, startDate, endDate) {
+                try {
+                    const data = await getStoreDetails(storeId, dateFilter, startDate, endDate);
+                    
+                    if (data.success) {
+                        salesData = data.sales;
+                        renderSalesTable(salesData);
+                    } else {
+                        throw new Error('获取销售数据失败');
+                    }
+                } catch (error) {
+                    console.error('加载销售数据出错:', error);
+                    alert('加载销售数据失败，请重试');
+                }
+            }
+            
+            // 计算今日销售额
+            function calculateTodaySales() {
+                const today = new Date().toISOString().split('T')[0];
+                
+                return salesData
+                    .filter(sale => sale.sale_date.startsWith(today))
+                    .reduce((sum, sale) => sum + sale.amount, 0);
+            }
+            
+            // 渲染门店信息
+            function renderStoreInfo(store) {
+                document.getElementById('storeName').textContent = store.name;
+                
+                const address = `${store.address}, ${store.city}, ${store.province} ${store.zipcode}`;
+                document.getElementById('storeAddress').textContent = address;
+                
+                // 更新详细信息标签页
+                document.getElementById('info-name').textContent = store.name;
+                document.getElementById('info-address').textContent = store.address;
+                document.getElementById('info-city').textContent = store.city;
+                document.getElementById('info-province').textContent = store.province;
+                document.getElementById('info-zipcode').textContent = store.zipcode;
+                document.getElementById('info-phone').textContent = store.phone || '未设置';
+                document.getElementById('info-email').textContent = store.email || '未设置';
+            }
+            
+            // 筛选库存
+            function filterInventory() {
+                const searchText = document.getElementById('inventorySearch').value.toLowerCase();
+                
+                if (!searchText.trim()) {
+                    sortInventory(inventoryData);
+                    return;
+                }
+                
+                const filteredInventory = inventoryData.filter(item => 
+                    item.name.toLowerCase().includes(searchText) || 
+                    item.sku.toLowerCase().includes(searchText) ||
+                    (item.color && item.color.toLowerCase().includes(searchText)) ||
+                    (item.size && item.size.toLowerCase().includes(searchText))
+                );
+                
+                sortInventory(filteredInventory);
+            }
+            
+            // 排序库存
+            function sortInventory(items = null) {
+                const sortBy = document.getElementById('inventorySortBy').value;
+                const itemsToSort = items || [...inventoryData];
+                
+                if (sortBy === 'name') {
+                    itemsToSort.sort((a, b) => a.name.localeCompare(b.name));
+                } else if (sortBy === 'quantity') {
+                    itemsToSort.sort((a, b) => b.quantity - a.quantity);
+                } else if (sortBy === 'price') {
+                    itemsToSort.sort((a, b) => b.price - a.price);
+                }
+                
+                renderInventoryTable(itemsToSort);
+            }
+            
+            // 渲染库存表格
+            function renderInventoryTable(inventory) {
+                const tbody = document.getElementById('inventoryTable');
+                
+                if (inventory.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6">暂无库存数据</td></tr>`;
+                    return;
+                }
+                
+                tbody.innerHTML = inventory.map(item => `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>${item.sku}</td>
+                        <td>${item.color || '-'}</td>
+                        <td>${item.size || '-'}</td>
+                        <td>¥${item.price.toLocaleString()}</td>
+                        <td>${item.quantity}</td>
+                    </tr>
+                `).join('');
+            }
+            
+            // 渲染销售记录表格
+            function renderSalesTable(sales) {
+                const tbody = document.getElementById('salesTable');
+                
+                if (sales.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5">暂无销售记录</td></tr>`;
+                    return;
+                }
+                
+                tbody.innerHTML = sales.map(sale => {
+                    const date = new Date(sale.sale_date);
+                    const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+                    
+                    return `
+                        <tr>
+                            <td>${formattedDate}</td>
+                            <td>${sale.product_name}</td>
+                            <td>${sale.sku}</td>
+                            <td>${sale.quantity}</td>
+                            <td>¥${sale.amount.toLocaleString()}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        });
+    </script>
+</body>
+</html> 

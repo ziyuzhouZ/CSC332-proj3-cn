@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>销售情况 - Fashion Store</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/pages/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../js/api/admin/auth-interceptor.js"></script>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- 侧边栏 -->
+        <div class="admin-sidebar">
+            <div class="logo">
+                <img src="../../public/images/icons/logo.png" alt="Fashion Store">
+            </div>
+            <ul>
+                <li><a href="dashboard.html"><i class="icon-dashboard"></i> 控制面板</a></li>
+                <li><a href="stores.html"><i class="icon-store"></i> 门店管理</a></li>
+                <li class="active"><a href="sales.html"><i class="icon-chart"></i> 销售情况</a></li>
+                <li><a href="orders.html"><i class="icon-orders"></i> 订单管理</a></li>
+                <div class="divider"></div>
+                <li><a href="../index.html"><i class="icon-storefront"></i> 访问前台</a></li>
+                <li><a href="#" id="logoutBtn"><i class="icon-logout"></i> 退出登录</a></li>
+            </ul>
+        </div>
+
+        <!-- 内容区 -->
+        <div class="admin-content">
+            <h1>销售情况</h1>
+            
+            <!-- 周期选择器 -->
+            <div class="filter-bar">
+                <div class="period-selector">
+                    <label>数据周期: </label>
+                    <select id="periodSelector">
+                        <option value="day">按日</option>
+                        <option value="week">按周</option>
+                        <option value="month" selected>按月</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- 总销售额曲线图 -->
+            <h2>总销售额趋势</h2>
+            <div class="chart-container">
+                <canvas id="salesChart"></canvas>
+            </div>
+            
+            <!-- 热销商品和门店销售排名 -->
+            <div class="flex-container">
+                <div class="flex-column">
+                    <h2>热销商品 TOP 10</h2>
+                    <div class="admin-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>排名</th>
+                                    <th>商品名称</th>
+                                    <th>销售量</th>
+                                    <th>销售额</th>
+                                </tr>
+                            </thead>
+                            <tbody id="topProductsTable">
+                                <tr>
+                                    <td colspan="4">加载中...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="flex-column">
+                    <h2>门店销售排名</h2>
+                    <div class="admin-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>排名</th>
+                                    <th>门店名称</th>
+                                    <th>销售额</th>
+                                </tr>
+                            </thead>
+                            <tbody id="storeRankingTable">
+                                <tr>
+                                    <td colspan="3">加载中...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 销售分析卡片 -->
+            <h2>销售分析</h2>
+            <div class="dashboard-cards">
+                <div class="dashboard-card">
+                    <div class="card-icon sales">
+                        <i class="icon-trend"></i>
+                    </div>
+                    <h3>销售增长率</h3>
+                    <div class="card-value" id="salesGrowth">-</div>
+                    <div class="card-meta">相比上期</div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-icon orders">
+                        <i class="icon-cart"></i>
+                    </div>
+                    <h3>平均交易额</h3>
+                    <div class="card-value" id="avgTransactionValue">-</div>
+                    <div class="card-meta">每笔交易</div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-icon stores">
+                        <i class="icon-calendar"></i>
+                    </div>
+                    <h3>销售高峰期</h3>
+                    <div class="card-value" id="peakSalesPeriod">-</div>
+                    <div class="card-meta">销售额最高</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { getSales } from '../../js/modules/auth/api.js';
+        
+        document.addEventListener('DOMContentLoaded', async function() {
+            // 已禁用管理员权限检查
+            // if (!isAdmin()) {
+            //     window.location.href = '../auth/login.html?redirect=admin';
+            //     return;
+            // }
+            
+            // 绑定退出登录按钮
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('admin_token');
+                localStorage.removeItem('admin_data');
+                window.location.href = 'login.html';
+            });
+            
+            // 存储销售数据
+            let salesData = {
+                salesData: [],
+                topProducts: [],
+                storeRanking: []
+            };
+            
+            // 初始加载
+            let currentPeriod = document.getElementById('periodSelector').value;
+            await loadSalesData(currentPeriod);
+            
+            // 周期选择器事件绑定
+            document.getElementById('periodSelector').addEventListener('change', async function() {
+                currentPeriod = this.value;
+                await loadSalesData(currentPeriod);
+            });
+            
+            // 加载销售数据
+            async function loadSalesData(period) {
+                try {
+                    const data = await getSales(period);
+                    
+                    if (!data.success) {
+                        throw new Error('获取销售数据失败');
+                    }
+                    
+                    salesData = data;
+                    
+                    // 渲染销售趋势图表
+                    renderSalesChart(salesData.salesData, period);
+                    
+                    // 渲染热销商品表格
+                    renderTopProducts(salesData.topProducts);
+                    
+                    // 渲染门店销售排名
+                    renderStoreRanking(salesData.storeRanking);
+                    
+                    // 计算和渲染销售分析
+                    renderSalesAnalysis(salesData, period);
+                    
+                } catch (error) {
+                    console.error('加载销售数据出错:', error);
+                    alert('加载销售数据失败，请刷新页面重试');
+                }
+            }
+            
+            // 渲染销售趋势图表
+            function renderSalesChart(salesData, period) {
+                const labels = salesData.map(data => formatPeriodLabel(data.period, period));
+                const values = salesData.map(data => data.total_sales);
+                
+                // 如果已存在图表，销毁它
+                if (window.salesChart) {
+                    window.salesChart.destroy();
+                }
+                
+                const ctx = document.getElementById('salesChart').getContext('2d');
+                window.salesChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: '销售额 (¥)',
+                            data: values,
+                            backgroundColor: 'rgba(255, 79, 79, 0.1)',
+                            borderColor: '#ff4f4f',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    drawBorder: false
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `销售额: ¥${context.raw.toLocaleString()}`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // 格式化周期标签
+            function formatPeriodLabel(period, periodType) {
+                if (periodType === 'day') {
+                    return period; // 日期格式如 2023-07-01
+                } else if (periodType === 'week') {
+                    const [year, week] = period.split('-');
+                    return `${year}年第${week}周`;
+                } else if (periodType === 'month') {
+                    const [year, month] = period.split('-');
+                    return `${year}年${month}月`;
+                }
+                return period;
+            }
+            
+            // 渲染热销商品表格
+            function renderTopProducts(products) {
+                const tbody = document.getElementById('topProductsTable');
+                
+                if (products.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4">暂无数据</td></tr>';
+                    return;
+                }
+                
+                tbody.innerHTML = products.map((product, index) => `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${product.name}</td>
+                        <td>${product.total_quantity}</td>
+                        <td>¥${product.total_amount.toLocaleString()}</td>
+                    </tr>
+                `).join('');
+            }
+            
+            // 渲染门店销售排名
+            function renderStoreRanking(stores) {
+                const tbody = document.getElementById('storeRankingTable');
+                
+                if (stores.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3">暂无数据</td></tr>';
+                    return;
+                }
+                
+                tbody.innerHTML = stores.map((store, index) => `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${store.name}</td>
+                        <td>¥${store.total_sales.toLocaleString()}</td>
+                    </tr>
+                `).join('');
+            }
+            
+            // 渲染销售分析
+            function renderSalesAnalysis(salesData, period) {
+                // 计算销售增长率
+                const growthRate = calculateGrowthRate(salesData.salesData);
+                document.getElementById('salesGrowth').innerHTML = 
+                    `${growthRate > 0 ? '+' : ''}${growthRate.toFixed(2)}%`;
+                document.getElementById('salesGrowth').style.color = 
+                    growthRate >= 0 ? '#00cc00' : '#ff4f4f';
+                
+                // 计算平均交易额（假设每次销售是一笔交易）
+                // 实际应该基于订单数据计算，这里简化处理
+                const totalSales = salesData.salesData.reduce((sum, data) => sum + data.total_sales, 0);
+                const totalQuantity = salesData.topProducts.reduce((sum, product) => sum + product.total_quantity, 0);
+                const avgTransaction = totalQuantity > 0 ? totalSales / totalQuantity : 0;
+                
+                document.getElementById('avgTransactionValue').textContent = 
+                    `¥${avgTransaction.toLocaleString(undefined, {maximumFractionDigits: 2})}`;
+                
+                // 找出销售高峰期
+                const peakPeriod = findPeakSalesPeriod(salesData.salesData, period);
+                document.getElementById('peakSalesPeriod').textContent = peakPeriod;
+            }
+            
+            // 计算销售增长率
+            function calculateGrowthRate(salesData) {
+                if (salesData.length < 2) return 0;
+                
+                // 将销售数据分为两部分，计算增长率
+                const half = Math.floor(salesData.length / 2);
+                const recentPeriod = salesData.slice(half);
+                const previousPeriod = salesData.slice(0, half);
+                
+                const recentTotal = recentPeriod.reduce((sum, data) => sum + data.total_sales, 0);
+                const previousTotal = previousPeriod.reduce((sum, data) => sum + data.total_sales, 0);
+                
+                if (previousTotal === 0) return 100; // 避免除以零
+                
+                return ((recentTotal - previousTotal) / previousTotal) * 100;
+            }
+            
+            // 找出销售高峰期
+            function findPeakSalesPeriod(salesData, periodType) {
+                if (salesData.length === 0) return '无数据';
+                
+                // 找出销售额最高的周期
+                const peakPeriod = salesData.reduce((peak, current) => 
+                    current.total_sales > peak.total_sales ? current : peak
+                , salesData[0]);
+                
+                return formatPeriodLabel(peakPeriod.period, periodType);
+            }
+        });
+    </script>
+    
+    <style>
+        /* 额外的样式，特定于销售页面 */
+        .flex-container {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .flex-column {
+            flex: 1;
+            min-width: 0; /* 防止内容溢出 */
+        }
+        
+        @media (max-width: 1024px) {
+            .flex-container {
+                flex-direction: column;
+            }
+        }
+        
+        .period-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .period-selector label {
+            font-weight: 500;
+        }
+    </style>
+</body>
+</html> 

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台 - Fashion Store</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/pages/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 管理员认证拦截器 -->
+    <script src="../../js/api/admin/auth-interceptor.js"></script>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- 侧边栏 -->
+        <div class="admin-sidebar">
+            <div class="logo">
+                <img src="../../public/images/icons/logo.png" alt="Fashion Store">
+            </div>
+            <ul>
+                <li class="active"><a href="dashboard.html"><i class="icon-dashboard"></i> 控制面板</a></li>
+                <li><a href="stores.html"><i class="icon-store"></i> 门店管理</a></li>
+                <li><a href="sales.html"><i class="icon-chart"></i> 销售情况</a></li>
+                <li><a href="orders.html"><i class="icon-orders"></i> 订单管理</a></li>
+                <div class="divider"></div>
+                <li><a href="../index.html"><i class="icon-storefront"></i> 访问前台</a></li>
+                <li><a href="#" id="logoutBtn"><i class="icon-logout"></i> 退出登录</a></li>
+            </ul>
+        </div>
+
+        <!-- 内容区 -->
+        <div class="admin-content">
+            <h1>控制面板</h1>
+            <p class="admin-header-meta">欢迎您，管理员 <span id="adminName">加载中...</span></p>
+            
+            <!-- 概览卡片 -->
+            <div class="dashboard-cards">
+                <div class="dashboard-card" onclick="location.href='stores.html'">
+                    <div class="card-icon stores">
+                        <i class="icon-store"></i>
+                    </div>
+                    <h3>门店管理</h3>
+                    <div class="card-value" id="totalStores">-</div>
+                    <div class="card-meta">所有门店总数</div>
+                </div>
+                
+                <div class="dashboard-card" onclick="location.href='sales.html'">
+                    <div class="card-icon sales">
+                        <i class="icon-chart"></i>
+                    </div>
+                    <h3>销售情况</h3>
+                    <div class="card-value" id="totalSales">-</div>
+                    <div class="card-meta">30天内销售总额</div>
+                </div>
+                
+                <div class="dashboard-card" onclick="location.href='orders.html'">
+                    <div class="card-icon orders">
+                        <i class="icon-orders"></i>
+                    </div>
+                    <h3>订单管理</h3>
+                    <div class="card-value" id="pendingOrders">-</div>
+                    <div class="card-meta">待处理订单</div>
+                </div>
+            </div>
+            
+            <!-- 最近销售趋势图表 -->
+            <h2>最近销售趋势</h2>
+            <div class="chart-container">
+                <canvas id="salesChart"></canvas>
+            </div>
+            
+            <!-- 热销商品 -->
+            <h2>热销商品 TOP 5</h2>
+            <div class="admin-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>商品名称</th>
+                            <th>销售数量</th>
+                            <th>销售金额</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topProductsTable">
+                        <tr>
+                            <td colspan="3">加载中...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 最新订单 -->
+            <h2>最新订单</h2>
+            <div class="admin-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>订单号</th>
+                            <th>客户</th>
+                            <th>金额</th>
+                            <th>时间</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody id="latestOrdersTable">
+                        <tr>
+                            <td colspan="5">加载中...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { getSession, isAdmin, getStores, getSales, getOrders } from '../../js/modules/auth/api.js';
+        import { logout } from '../../js/modules/auth/session.js';
+        
+        document.addEventListener('DOMContentLoaded', async function() {
+            // 已禁用管理员权限检查
+            // if (!isAdmin()) {
+            //     window.location.href = './login.html';
+            //     return;
+            // }
+            
+            // 显示管理员名称
+            const adminData = JSON.parse(localStorage.getItem('admin_data') || '{"username":"管理员"}');
+            document.getElementById('adminName').textContent = adminData.username || '管理员';
+            
+            // 绑定退出登录按钮
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('admin_token');
+                localStorage.removeItem('admin_data');
+                window.location.href = 'login.html';
+            });
+            
+            try {
+                // 加载门店数据
+                const storesData = await getStores();
+                if (storesData.success) {
+                    document.getElementById('totalStores').textContent = storesData.stores.length;
+                }
+                
+                // 加载销售数据
+                const salesData = await getSales('month');
+                if (salesData.success) {
+                    // 显示总销售额
+                    const totalSales = salesData.salesData.reduce((sum, data) => sum + data.total_sales, 0);
+                    document.getElementById('totalSales').textContent = `¥${totalSales.toLocaleString()}`;
+                    
+                    // 渲染销售趋势图表
+                    renderSalesChart(salesData.salesData);
+                    
+                    // 渲染热销商品表格
+                    renderTopProducts(salesData.topProducts.slice(0, 5));
+                }
+                
+                // 加载订单数据
+                const ordersData = await getOrders('pending');
+                if (ordersData.success) {
+                    document.getElementById('pendingOrders').textContent = ordersData.pagination.total;
+                    
+                    // 渲染最新订单表格
+                    renderLatestOrders(ordersData.orders.slice(0, 5));
+                }
+            } catch (error) {
+                console.error('加载数据出错:', error);
+            }
+        });
+        
+        // 渲染销售趋势图表
+        function renderSalesChart(salesData) {
+            const labels = salesData.map(data => data.period);
+            const values = salesData.map(data => data.total_sales);
+            
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '销售额 (¥)',
+                        data: values,
+                        backgroundColor: 'rgba(255, 79, 79, 0.1)',
+                        borderColor: '#ff4f4f',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 渲染热销商品表格
+        function renderTopProducts(products) {
+            const tbody = document.getElementById('topProductsTable');
+            
+            if (products.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3">暂无数据</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = products.map(product => `
+                <tr>
+                    <td>${product.name}</td>
+                    <td>${product.total_quantity}</td>
+                    <td>¥${product.total_amount.toLocaleString()}</td>
+                </tr>
+            `).join('');
+        }
+        
+        // 渲染最新订单表格
+        function renderLatestOrders(orders) {
+            const tbody = document.getElementById('latestOrdersTable');
+            
+            if (orders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5">暂无数据</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = orders.map(order => {
+                const date = new Date(order.created_at);
+                const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+                
+                return `
+                    <tr>
+                        <td>${order.id}</td>
+                        <td>${order.customer_name || '未登录用户'}</td>
+                        <td>¥${order.total_amount.toLocaleString()}</td>
+                        <td>${formattedDate}</td>
+                        <td><span class="status ${order.status}">${getStatusText(order.status)}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        // 获取状态文本
+        function getStatusText(status) {
+            const statusMap = {
+                'pending': '待处理',
+                'shipped': '已发货',
+                'completed': '已完成'
+            };
+            
+            return statusMap[status] || status;
+        }
+    </script>
+</body>
+</html>

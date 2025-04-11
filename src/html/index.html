@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Store - 时尚服装商城</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components/navbar.css">
+    <link rel="stylesheet" href="../css/components/footer.css">
+    <link rel="stylesheet" href="../css/pages/home.css">
+    <style>
+        /* 用户状态样式 */
+        .user-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .login-link, .register-link, .user-link {
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            padding: 5px 10px;
+            transition: color 0.3s;
+        }
+        
+        .login-link:hover, .register-link:hover, .user-link:hover {
+            color: #888;
+        }
+        
+        .user-dropdown {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="navbar-left">
+                <button class="menu-toggle" aria-label="菜单">
+                    <span>男装</span>
+                    <span>女装</span>
+                    <span>配饰</span>
+                </button>
+                <ul class="nav-links">
+                    <li><a href="index.html">首页</a></li>
+                    <li>
+                        <a href="shop.html" class="dropdown-toggle">商品分类</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="shop.html?category=women">女装</a></li>
+                            <li><a href="shop.html?category=men">男装</a></li>
+                            <li><a href="shop.html?category=accessories">配饰</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="about-pages/brand-story.html">品牌故事</a></li>
+                    <li><a href="store-finder.html">最近门店</a></li>
+                </ul>
+            </div>
+            
+            <div class="navbar-center">
+                <a href="index.html" class="logo">
+                    <img src="../public/images/icons/logo.png" alt="FASHION" class="logo-img">
+                </a>
+            </div>
+            
+            <div class="navbar-right">
+                <div class="user-status">
+                    <!-- 用户状态将由JS动态生成 -->
+                </div>
+                <div class="nav-icons">
+                    <a href="shop.html" class="icon-link">
+                        <img src="../public/images/icons/shop.png" alt="购物" class="icon">
+                    </a>
+                    <a href="cart.html" class="icon-link cart-icon">
+                        <img src="../public/images/icons/cart.png" alt="购物车" class="icon">
+                        <span class="cart-badge">0</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero-carousel">
+            <div class="carousel-tabs">
+                <button class="carousel-tab active" data-tab="spring">春季新品</button>
+                <button class="carousel-tab" data-tab="summer">夏季精选</button>
+                <button class="carousel-tab" data-tab="fall">秋季新品</button>
+            </div>
+            <div class="carousel-container">
+                <div class="carousel-track">
+                    <div class="carousel-slide active" data-tab="spring">
+                        <img src="../public/images/banners/banner_01_spring.jpg" alt="春季新品">
+                        <div class="carousel-content">
+                            <h2>春季新品上市</h2>
+                            <p>探索2024春季最新系列</p>
+                            <a href="shop.html?category=new" class="btn-primary">立即购买</a>
+                        </div>
+                    </div>
+                    <div class="carousel-slide" data-tab="summer">
+                        <img src="../public/images/banners/banner_02_summer.jpg" alt="夏季精选">
+                        <div class="carousel-content">
+                            <h2>夏日清凉特惠</h2>
+                            <p>精选夏季服饰，清爽一夏</p>
+                            <a href="shop.html?category=summer" class="btn-primary">查看详情</a>
+                        </div>
+                    </div>
+                    <div class="carousel-slide" data-tab="fall">
+                        <img src="../public/images/banners/banner_03_fall.jpg" alt="秋季新品">
+                        <div class="carousel-content">
+                            <h2>秋季新品发布</h2>
+                            <p>感受秋日时尚魅力</p>
+                            <a href="shop.html?category=fall" class="btn-primary">立即选购</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="featured-categories">
+            <h2 class="section-title">热门分类</h2>
+            <div class="category-grid">
+                <a href="shop.html?category=women" class="category-card">
+                    <img src="../public/images/categories/women.jpg" alt="女装">
+                    <h3>女装</h3>
+                </a>
+                <a href="shop.html?category=men" class="category-card">
+                    <img src="../public/images/categories/men.jpg" alt="男装">
+                    <h3>男装</h3>
+                </a>
+                <a href="shop.html?category=accessories" class="category-card">
+                    <img src="../public/images/categories/accessories.jpg" alt="配饰">
+                    <h3>配饰</h3>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>关于我们</h3>
+                <ul>
+                    <li><a href="about-pages/brand-story.html">品牌故事</a></li>
+                    <li><a href="about-pages/contact.html">联系我们</a></li>
+                    <li><a href="about-pages/careers.html">加入我们</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>帮助中心</h3>
+                <ul>
+                    <li><a href="about-pages/shopping-guide.html">购物指南</a></li>
+                    <li><a href="about-pages/shipping-returns.html">退换政策</a></li>
+                    <li><a href="about-pages/faq.html">常见问题</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>关注我们</h3>
+                <div class="social-links">
+                    <a href="https://weixin.qq.com" target="_blank" rel="noopener noreferrer" aria-label="关注我们的微信公众号">微信</a>
+                    <a href="https://weibo.com" target="_blank" rel="noopener noreferrer" aria-label="关注我们的微博">微博</a>
+                    <a href="https://www.douyin.com" target="_blank" rel="noopener noreferrer" aria-label="关注我们的抖音">抖音</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>商务合作</h3>
+                <ul>
+                    <li><a href="about-pages/partners.html">品牌合作</a></li>
+                    <li><a href="about-pages/media.html">媒体报道</a></li>
+                    <li><a href="about-pages/investors.html">投资者关系</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Fashion Store. All rights reserved. | 隐私政策 | 用户协议 | 营业执照</p>
+        </div>
+    </footer>
+
+    <script type="module" src="../js/main.js"></script>
+    <script type="module" src="../js/modules/carousel.js"></script>
+    
+    <!-- 底部必须脚本 -->
+    <script type="module" src="../js/modules/auth/session.js"></script>
+    <script type="module" src="../js/modules/cart.js"></script>
+    
+    <!-- 页面特定脚本 -->
+    <script type="module" src="../js/pages/home.js"></script>
+    
+    <script type="module">
+        import { updateNavbarUserStatus } from '../js/modules/auth/session.js';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('首页加载完成，更新用户状态');
+            updateNavbarUserStatus();
+        });
+    </script>
+</body>
+</html>

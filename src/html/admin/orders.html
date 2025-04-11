@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订单管理 - Fashion Store</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/pages/admin.css">
+    <script src="../../js/api/admin/auth-interceptor.js"></script>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- 侧边栏 -->
+        <div class="admin-sidebar">
+            <div class="logo">
+                <img src="../../public/images/icons/logo.png" alt="Fashion Store">
+            </div>
+            <ul>
+                <li><a href="dashboard.html"><i class="icon-dashboard"></i> 控制面板</a></li>
+                <li><a href="stores.html"><i class="icon-store"></i> 门店管理</a></li>
+                <li><a href="sales.html"><i class="icon-chart"></i> 销售情况</a></li>
+                <li class="active"><a href="orders.html"><i class="icon-orders"></i> 订单管理</a></li>
+                <div class="divider"></div>
+                <li><a href="../index.html"><i class="icon-storefront"></i> 访问前台</a></li>
+                <li><a href="#" id="logoutBtn"><i class="icon-logout"></i> 退出登录</a></li>
+            </ul>
+        </div>
+
+        <!-- 内容区 -->
+        <div class="admin-content">
+            <div class="admin-header">
+                <h1>订单管理</h1>
+                <p class="admin-header-meta">管理所有订单状态和详情</p>
+            </div>
+            
+            <!-- 订单类型标签页 -->
+            <div class="tab-nav">
+                <button id="tab-pending" class="active">待处理订单</button>
+                <button id="tab-shipped">已发货订单</button>
+                <button id="tab-completed">已完成订单</button>
+            </div>
+            
+            <!-- 筛选和搜索 -->
+            <div class="filter-bar">
+                <input type="text" id="orderSearch" placeholder="搜索订单号或客户名...">
+                <select id="sortOrders">
+                    <option value="date_desc">最新订单优先</option>
+                    <option value="date_asc">最早订单优先</option>
+                    <option value="amount_desc">金额从高到低</option>
+                    <option value="amount_asc">金额从低到高</option>
+                </select>
+                <button id="exportBtn" class="secondary">导出订单</button>
+            </div>
+            
+            <!-- 待处理订单 -->
+            <div id="content-pending" class="tab-content active">
+                <div class="admin-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>订单号</th>
+                                <th>客户名称</th>
+                                <th>金额</th>
+                                <th>商品数量</th>
+                                <th>下单时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pendingOrdersTable">
+                            <tr>
+                                <td colspan="6">加载中...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- 分页 -->
+                <div class="pagination" id="pending-pagination"></div>
+            </div>
+            
+            <!-- 已发货订单 -->
+            <div id="content-shipped" class="tab-content">
+                <div class="admin-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>订单号</th>
+                                <th>客户名称</th>
+                                <th>金额</th>
+                                <th>商品数量</th>
+                                <th>发货时间</th>
+                                <th>快递单号</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="shippedOrdersTable">
+                            <tr>
+                                <td colspan="7">加载中...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- 分页 -->
+                <div class="pagination" id="shipped-pagination"></div>
+            </div>
+            
+            <!-- 已完成订单 -->
+            <div id="content-completed" class="tab-content">
+                <div class="admin-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>订单号</th>
+                                <th>客户名称</th>
+                                <th>金额</th>
+                                <th>商品数量</th>
+                                <th>完成时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="completedOrdersTable">
+                            <tr>
+                                <td colspan="6">加载中...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- 分页 -->
+                <div class="pagination" id="completed-pagination"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { getOrders } from '../../js/modules/auth/api.js';
+        
+        document.addEventListener('DOMContentLoaded', async function() {
+            // 已禁用管理员权限检查
+            // if (!isAdmin()) {
+            //     window.location.href = './login.html';
+            //     return;
+            // }
+            
+            // 绑定退出登录按钮
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('admin_token');
+                localStorage.removeItem('admin_data');
+                window.location.href = 'login.html';
+            });
+            
+            // 标签页切换
+            document.querySelectorAll('.tab-nav button').forEach(button => {
+                button.addEventListener('click', function() {
+                    // 移除所有标签页的激活状态
+                    document.querySelectorAll('.tab-nav button').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // 隐藏所有内容
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // 激活当前标签页
+                    this.classList.add('active');
+                    
+                    // 显示对应内容
+                    const contentId = 'content-' + this.id.split('-')[1];
+                    document.getElementById(contentId).classList.add('active');
+                    
+                    // 加载对应标签页的订单数据
+                    const status = this.id.split('-')[1];
+                    loadOrders(status, 1);
+                });
+            });
+            
+            // 搜索和排序绑定
+            document.getElementById('orderSearch').addEventListener('input', function() {
+                const activeTab = document.querySelector('.tab-nav button.active').id.split('-')[1];
+                loadOrders(activeTab, 1);
+            });
+            
+            document.getElementById('sortOrders').addEventListener('change', function() {
+                const activeTab = document.querySelector('.tab-nav button.active').id.split('-')[1];
+                loadOrders(activeTab, 1);
+            });
+            
+            // 导出按钮
+            document.getElementById('exportBtn').addEventListener('click', function() {
+                alert('订单导出功能即将推出');
+            });
+            
+            // 初始加载待处理订单
+            loadOrders('pending', 1);
+            
+            // 加载订单数据
+            async function loadOrders(status, page) {
+                try {
+                    // 获取搜索和排序条件
+                    const searchText = document.getElementById('orderSearch').value.trim();
+                    const sortOption = document.getElementById('sortOrders').value;
+                    
+                    const data = await getOrders(status, page, 20);
+                    
+                    if (!data.success) {
+                        throw new Error('获取订单数据失败');
+                    }
+                    
+                    // 根据搜索文本筛选
+                    let orders = data.orders;
+                    if (searchText) {
+                        orders = orders.filter(order => 
+                            order.id.toString().includes(searchText) || 
+                            (order.customer_name && order.customer_name.toLowerCase().includes(searchText.toLowerCase()))
+                        );
+                    }
+                    
+                    // 根据排序选项排序
+                    sortOrders(orders, sortOption);
+                    
+                    // 渲染订单表格
+                    renderOrdersTable(status, orders);
+                    
+                    // 渲染分页组件
+                    renderPagination(status, data.pagination, page);
+                    
+                } catch (error) {
+                    console.error('加载订单数据出错:', error);
+                    document.getElementById(`${status}OrdersTable`).innerHTML = `
+                        <tr>
+                            <td colspan="7">加载数据出错，请刷新页面重试</td>
+                        </tr>
+                    `;
+                }
+            }
+            
+            // 排序订单
+            function sortOrders(orders, sortOption) {
+                switch (sortOption) {
+                    case 'date_desc':
+                        orders.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                        break;
+                    case 'date_asc':
+                        orders.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+                        break;
+                    case 'amount_desc':
+                        orders.sort((a, b) => b.total_amount - a.total_amount);
+                        break;
+                    case 'amount_asc':
+                        orders.sort((a, b) => a.total_amount - b.total_amount);
+                        break;
+                }
+            }
+            
+            // 渲染订单表格
+            function renderOrdersTable(status, orders) {
+                const tableId = `${status}OrdersTable`;
+                const tbody = document.getElementById(tableId);
+                
+                if (orders.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7">暂无订单</td></tr>`;
+                    return;
+                }
+                
+                if (status === 'pending') {
+                    tbody.innerHTML = orders.map(order => {
+                        const date = new Date(order.created_at);
+                        const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+                        
+                        return `
+                            <tr>
+                                <td>${order.id}</td>
+                                <td>${order.customer_name || '未登录用户'}</td>
+                                <td>¥${order.total_amount.toLocaleString()}</td>
+                                <td>${order.item_count || 0}</td>
+                                <td>${formattedDate}</td>
+                                <td class="actions">
+                                    <button onclick="window.location.href='order-detail.html?id=${order.id}'">
+                                        查看详情
+                                    </button>
+                                    <button onclick="markAsShipped(${order.id})">
+                                        标记发货
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                } else if (status === 'shipped') {
+                    tbody.innerHTML = orders.map(order => {
+                        const date = new Date(order.created_at);
+                        const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+                        
+                        return `
+                            <tr>
+                                <td>${order.id}</td>
+                                <td>${order.customer_name || '未登录用户'}</td>
+                                <td>¥${order.total_amount.toLocaleString()}</td>
+                                <td>${order.item_count || 0}</td>
+                                <td>${formattedDate}</td>
+                                <td>${order.tracking_number || '未录入'}</td>
+                                <td class="actions">
+                                    <button onclick="window.location.href='order-detail.html?id=${order.id}'">
+                                        查看详情
+                                    </button>
+                                    <button onclick="markAsCompleted(${order.id})">
+                                        标记完成
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                } else if (status === 'completed') {
+                    tbody.innerHTML = orders.map(order => {
+                        const date = new Date(order.created_at);
+                        const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+                        
+                        return `
+                            <tr>
+                                <td>${order.id}</td>
+                                <td>${order.customer_name || '未登录用户'}</td>
+                                <td>¥${order.total_amount.toLocaleString()}</td>
+                                <td>${order.item_count || 0}</td>
+                                <td>${formattedDate}</td>
+                                <td class="actions">
+                                    <button onclick="window.location.href='order-detail.html?id=${order.id}'">
+                                        查看详情
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+                
+                // 添加标记发货和标记完成事件处理
+                window.markAsShipped = function(orderId) {
+                    alert(`订单 ${orderId} 标记为已发货功能即将推出`);
+                };
+                
+                window.markAsCompleted = function(orderId) {
+                    alert(`订单 ${orderId} 标记为已完成功能即将推出`);
+                };
+            }
+            
+            // 渲染分页
+            function renderPagination(status, paginationData, currentPage) {
+                const paginationContainer = document.getElementById(`${status}-pagination`);
+                
+                if (!paginationData || paginationData.total_pages <= 1) {
+                    paginationContainer.innerHTML = '';
+                    return;
+                }
+                
+                const totalPages = paginationData.total_pages;
+                let paginationHTML = '';
+                
+                // 上一页按钮
+                paginationHTML += `
+                    <button 
+                        ${currentPage === 1 ? 'disabled' : ''} 
+                        onclick="changePage('${status}', ${currentPage - 1})"
+                    >
+                        上一页
+                    </button>
+                `;
+                
+                // 页码按钮
+                const pageNumbers = getPageNumbers(currentPage, totalPages);
+                pageNumbers.forEach(page => {
+                    if (page === '...') {
+                        paginationHTML += `<button disabled>...</button>`;
+                    } else {
+                        paginationHTML += `
+                            <button 
+                                ${page === currentPage ? 'class="active"' : ''} 
+                                onclick="changePage('${status}', ${page})"
+                            >
+                                ${page}
+                            </button>
+                        `;
+                    }
+                });
+                
+                // 下一页按钮
+                paginationHTML += `
+                    <button 
+                        ${currentPage === totalPages ? 'disabled' : ''} 
+                        onclick="changePage('${status}', ${currentPage + 1})"
+                    >
+                        下一页
+                    </button>
+                `;
+                
+                paginationContainer.innerHTML = paginationHTML;
+                
+                // 页码变更全局函数
+                window.changePage = function(status, page) {
+                    loadOrders(status, page);
+                };
+            }
+            
+            // 获取要显示的页码
+            function getPageNumbers(currentPage, totalPages) {
+                if (totalPages <= 7) {
+                    return Array.from({ length: totalPages }, (_, i) => i + 1);
+                }
+                
+                if (currentPage <= 3) {
+                    return [1, 2, 3, 4, '...', totalPages - 1, totalPages];
+                }
+                
+                if (currentPage >= totalPages - 2) {
+                    return [1, 2, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+                }
+                
+                return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages];
+            }
+        });
+    </script>
+</body>
+</html> 

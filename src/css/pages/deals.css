@@ -1,0 +1,425 @@
+/* 特惠页面样式 */
+.deals-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 促销横幅 */
+.promo-banner {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    border-radius: 12px;
+    padding: 40px;
+    color: white;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.banner-content h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.banner-content p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+}
+
+.countdown {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.countdown-timer {
+    display: flex;
+    gap: 15px;
+}
+
+.time-unit {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 15px;
+    border-radius: 8px;
+    min-width: 80px;
+    text-align: center;
+}
+
+.time-unit span {
+    font-size: 2em;
+    font-weight: bold;
+    display: block;
+}
+
+.time-unit label {
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+/* 优惠券区域 */
+.coupons-section {
+    margin-bottom: 40px;
+}
+
+.coupons-section h2 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+}
+
+.coupons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.coupon-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    position: relative;
+    overflow: hidden;
+}
+
+.coupon-amount {
+    display: flex;
+    align-items: baseline;
+    color: var(--primary-color);
+    margin-right: 20px;
+}
+
+.coupon-amount .currency {
+    font-size: 1.2em;
+}
+
+.coupon-amount .amount {
+    font-size: 2.5em;
+    font-weight: bold;
+}
+
+.coupon-info {
+    flex: 1;
+}
+
+.coupon-info .condition {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+
+.coupon-info .validity {
+    font-size: 0.9em;
+    color: var(--text-light);
+}
+
+.btn-get-coupon {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    padding: 8px 15px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-get-coupon:hover {
+    background: var(--primary-dark);
+}
+
+.member-tag {
+    position: absolute;
+    top: 10px;
+    right: -30px;
+    background: var(--accent-color);
+    color: white;
+    padding: 5px 30px;
+    transform: rotate(45deg);
+    font-size: 0.8em;
+}
+
+/* 特惠商品 */
+.deals-section {
+    margin-bottom: 40px;
+}
+
+.deals-section h2 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+}
+
+.deals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.product-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-image {
+    position: relative;
+    padding-top: 100%;
+}
+
+.product-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.discount-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--primary-color);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.member-price {
+    font-size: 0.8em;
+    display: block;
+}
+
+.product-info {
+    padding: 15px;
+}
+
+.product-name {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-price {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.current-price {
+    color: var(--primary-color);
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.original-price {
+    color: var(--text-light);
+    text-decoration: line-through;
+    font-size: 0.9em;
+}
+
+.product-points {
+    font-size: 0.9em;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-buy {
+    width: 100%;
+    padding: 10px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-buy:hover {
+    background: var(--primary-dark);
+}
+
+/* 积分兑换 */
+.points-section {
+    margin-bottom: 40px;
+}
+
+.points-section h2 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+}
+
+.points-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.points-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.points-price {
+    color: var(--accent-color);
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.stock-info {
+    margin-bottom: 15px;
+}
+
+.progress-bar {
+    height: 4px;
+    background: #eee;
+    border-radius: 2px;
+    margin-bottom: 5px;
+}
+
+.progress {
+    height: 100%;
+    background: var(--accent-color);
+    border-radius: 2px;
+    transition: width 0.3s;
+}
+
+.stock-text {
+    font-size: 0.9em;
+    color: var(--text-light);
+}
+
+.btn-exchange {
+    width: 100%;
+    padding: 10px;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-exchange:hover {
+    background: var(--accent-dark);
+}
+
+/* 提示和模态框 */
+.toast-success {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: white;
+    padding: 15px 30px;
+    border-radius: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transition: all 0.3s;
+}
+
+.toast-success.visible {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.toast-success i {
+    color: var(--success-color);
+}
+
+#pointsModal .modal-body {
+    padding: 20px;
+}
+
+.points-tips {
+    margin-top: 20px;
+    background: #f8f8f8;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.points-tips h4 {
+    margin-bottom: 10px;
+}
+
+.points-tips ul {
+    list-style: none;
+    padding: 0;
+}
+
+.points-tips li {
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.points-tips li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--primary-color);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .promo-banner {
+        padding: 30px 20px;
+    }
+
+    .banner-content h1 {
+        font-size: 2em;
+    }
+
+    .time-unit {
+        min-width: 60px;
+        padding: 10px;
+    }
+
+    .time-unit span {
+        font-size: 1.5em;
+    }
+
+    .coupons-grid,
+    .deals-grid,
+    .points-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .countdown-timer {
+        gap: 10px;
+    }
+
+    .time-unit {
+        min-width: 50px;
+        padding: 8px;
+    }
+
+    .time-unit span {
+        font-size: 1.2em;
+    }
+
+    .coupons-grid,
+    .deals-grid,
+    .points-grid {
+        grid-template-columns: 1fr;
+    }
+} 

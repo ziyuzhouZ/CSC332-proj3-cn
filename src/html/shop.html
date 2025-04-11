@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品列表 - Fashion Store</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components/navbar.css">
+    <link rel="stylesheet" href="../css/pages/shop.css">
+    <style>
+        /* Toast 消息样式 */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .toast {
+            background-color: var(--white);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 200px;
+            animation: fadeIn 0.3s;
+        }
+        
+        .toast.success i {
+            color: var(--success-color);
+        }
+        
+        .toast.error i {
+            color: var(--error-color);
+        }
+        
+        .toast.hide {
+            animation: fadeOut 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(20px); }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="navbar-left">
+                <button class="menu-toggle" aria-label="菜单">
+                    <span>男装</span>
+                    <span>女装</span>
+                    <span>配饰</span>
+                </button>
+                <ul class="nav-links">
+                    <li><a href="index.html">首页</a></li>
+                    <li>
+                        <a href="shop.html" class="dropdown-toggle">商品分类</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="shop.html?category=women">女装</a></li>
+                            <li><a href="shop.html?category=men">男装</a></li>
+                            <li><a href="shop.html?category=accessories">配饰</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="about-pages/brand-story.html">品牌故事</a></li>
+                </ul>
+            </div>
+            
+            <div class="navbar-center">
+                <a href="index.html" class="logo">
+                    <img src="../public/images/icons/logo.png" alt="FASHION" class="logo-img">
+                </a>
+            </div>
+            
+            <div class="navbar-right">
+                <div class="user-status">
+                    <!-- 用户状态将由JS动态生成 -->
+                </div>
+                <div class="nav-icons">
+                    <a href="shop.html" class="icon-link">
+                        <img src="../public/images/icons/shop.png" alt="购物" class="icon">
+                    </a>
+                    <a href="cart.html" class="icon-link cart-icon">
+                        <img src="../public/images/icons/cart.png" alt="购物车" class="icon">
+                        <span class="cart-badge">0</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="shop-container">
+        <!-- 筛选栏 -->
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label>性别</label>
+                <div class="filter-options">
+                    <button class="filter-option active" data-gender="all">全部</button>
+                    <button class="filter-option" data-gender="men">男装</button>
+                    <button class="filter-option" data-gender="women">女装</button>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label>品类</label>
+                <div class="filter-options">
+                    <button class="filter-option active" data-category="all">全部</button>
+                    <button class="filter-option" data-category="tops">上装</button>
+                    <button class="filter-option" data-category="bottoms">下装</button>
+                    <button class="filter-option" data-category="dresses">连衣裙</button>
+                    <button class="filter-option" data-category="outerwear">外套</button>
+                    <button class="filter-option" data-category="accessories">配饰</button>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label>价格</label>
+                <div class="filter-options price-range">
+                    <input type="number" id="minPrice" placeholder="最低价">
+                    <span>-</span>
+                    <input type="number" id="maxPrice" placeholder="最高价">
+                    <button class="btn-apply">确定</button>
+                </div>
+            </div>
+
+            <div class="filter-group sort-group">
+                <label>排序</label>
+                <select id="sortSelect">
+                    <option value="default">默认排序</option>
+                    <option value="price-asc">价格从低到高</option>
+                    <option value="price-desc">价格从高到低</option>
+                    <option value="newest">最新上架</option>
+                    <option value="popular">人气优先</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 商品网格 -->
+        <div class="products-grid">
+            <!-- 商品卡片模板 -->
+            <template id="productTemplate">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="" alt="" loading="lazy">
+                        <button class="btn-quick-add">
+                            <i class="icon-cart"></i>
+                            <span>加入购物车</span>
+                        </button>
+                        <button class="btn-favorite">
+                            <i class="icon-heart"></i>
+                        </button>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name"></h3>
+                        <div class="product-price">
+                            <span class="current-price"></span>
+                            <span class="original-price"></span>
+                            <span class="discount-tag"></span>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <!-- 分页控件 -->
+        <div class="pagination">
+            <button class="btn-prev" disabled>
+                <i class="icon-arrow-left"></i>
+                上一页
+            </button>
+            <div class="page-numbers">
+                <!-- 页码将动态生成 -->
+            </div>
+            <button class="btn-next">
+                下一页
+                <i class="icon-arrow-right"></i>
+            </button>
+        </div>
+
+        <!-- 加载动画 -->
+        <div class="loading-overlay">
+            <div class="loading-spinner"></div>
+        </div>
+        
+        <!-- Toast提示容器 -->
+        <div class="toast-container"></div>
+    </main>
+
+    <!-- 先加载购物车模块，再加载商品页面模块 -->
+    <script type="module" src="../js/modules/cart.js"></script>
+    <script type="module" src="../js/modules/shop.js"></script>
+    
+    <!-- 会话管理 -->
+    <script type="module">
+        import { updateNavbarUserStatus } from '../js/modules/auth/session.js';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('商品页面加载完成，更新用户状态');
+            updateNavbarUserStatus();
+        });
+    </script>
+</body>
+</html>

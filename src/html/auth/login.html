@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - Fashion Store</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/components/navbar.css">
+    <link rel="stylesheet" href="../../css/components/footer.css">
+    <link rel="stylesheet" href="../../css/pages/auth.css">
+    <style>
+        /* 解决导航栏遮挡问题 */
+        .auth-container {
+            padding-top: 80px; /* 根据导航栏高度调整 */
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="navbar-left">
+                <button class="menu-toggle" aria-label="菜单">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-links">
+                    <li><a href="../index.html">首页</a></li>
+                    <li><a href="../shop.html">商品</a></li>
+                    <li><a href="../about-pages/brand-story.html">关于</a></li>
+                    <li><a href="../store-finder.html">最近门店</a></li>
+                </ul>
+            </div>
+            
+            <div class="navbar-center">
+                <a href="../index.html" class="logo">
+                    <img src="../../public/images/icons/logo.png" alt="FASHION" class="logo-img">
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <a href="../index.html" class="logo">
+                    <img src="../../public/images/icons/logo.png" alt="FASHION" class="logo-img" style="max-width: 120px;">
+                </a>
+                <h1>欢迎回来</h1>
+                <p>还没有账号？<a href="register.html">立即注册</a></p>
+            </div>
+
+            <form id="loginForm" class="auth-form">
+                <div class="input-group">
+                    <label for="email">邮箱</label>
+                    <input type="email" 
+                           id="email" 
+                           name="email" 
+                           required 
+                           pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                           placeholder="请输入邮箱">
+                    <div class="error-tooltip">
+                        <i class="icon-warning"></i>
+                        <span></span>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">密码</label>
+                    <div class="password-input">
+                        <input type="password" 
+                               id="password" 
+                               name="password" 
+                               required 
+                               minlength="8"
+                               placeholder="请输入密码">
+                        <button type="button" class="toggle-password" aria-label="显示密码">
+                            <i class="icon-eye"></i>
+                        </button>
+                    </div>
+                    <div class="error-tooltip">
+                        <i class="icon-warning"></i>
+                        <span></span>
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember">
+                        <span>记住我</span>
+                    </label>
+                    <a href="#" class="forgot-password">忘记密码？</a>
+                </div>
+
+                <button type="submit" class="btn-primary btn-login">
+                    <span>登录</span>
+                    <div class="loading-spinner"></div>
+                </button>
+                
+                <div class="divider">
+                    <span>或</span>
+                </div>
+
+                <div class="third-party-login">
+                    <button type="button" class="btn-social wechat-login">
+                        <img src="../../public/images/icons/wechat.svg" alt="微信">
+                        <span>微信登录</span>
+                    </button>
+                    <button type="button" class="btn-social weibo-login">
+                        <img src="../../public/images/icons/weibo.svg" alt="微博">
+                        <span>微博登录</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div id="successAnimation" class="success-animation"></div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>关于我们</h3>
+                <ul>
+                    <li><a href="../about-pages/brand-story.html">品牌故事</a></li>
+                    <li><a href="../about-pages/contact.html">联系我们</a></li>
+                    <li><a href="../about-pages/careers.html">加入我们</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>帮助中心</h3>
+                <ul>
+                    <li><a href="../about-pages/shopping-guide.html">购物指南</a></li>
+                    <li><a href="../about-pages/shipping-returns.html">退换政策</a></li>
+                    <li><a href="../about-pages/faq.html">常见问题</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>关注我们</h3>
+                <div class="social-links">
+                    <a href="https://weixin.qq.com" target="_blank" rel="noopener noreferrer" aria-label="关注我们的微信公众号">微信</a>
+                    <a href="https://weibo.com" target="_blank" rel="noopener noreferrer" aria-label="关注我们的微博">微博</a>
+                    <a href="https://www.douyin.com" target="_blank" rel="noopener noreferrer" aria-label="关注我们的抖音">抖音</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>商务合作</h3>
+                <ul>
+                    <li><a href="../about-pages/partners.html">品牌合作</a></li>
+                    <li><a href="../about-pages/media.html">媒体报道</a></li>
+                    <li><a href="../about-pages/investors.html">投资者关系</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Fashion Store. All rights reserved. | 隐私政策 | 用户协议 | 营业执照</p>
+        </div>
+    </footer>
+
+    <script type="module" src="../../js/modules/auth/validation.js"></script>
+    <script type="module" src="../../js/modules/auth/api.js"></script>
+</body>
+</html>

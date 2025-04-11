@@ -1,0 +1,327 @@
+/* 订单详情页面样式 */
+.order-detail-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* 卡片通用样式 */
+.detail-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    padding: 24px;
+}
+
+.detail-card h3 {
+    margin: 0 0 16px;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+/* 状态卡片 */
+.status-card {
+    background: linear-gradient(135deg, var(--primary-light), var(--white));
+}
+
+.status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.status-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.status-info i {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+.status-text h3 {
+    margin: 0 0 4px;
+    color: var(--primary-color);
+}
+
+.status-desc {
+    margin: 0;
+    color: var(--text-light);
+}
+
+.status-actions {
+    display: flex;
+    gap: 12px;
+}
+
+/* 物流进度 */
+.logistics-progress {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-color);
+}
+
+.progress-track {
+    position: relative;
+    height: 4px;
+    background: var(--border-color);
+    margin: 32px 0;
+}
+
+.progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.progress-nodes {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+}
+
+.progress-node {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 2px solid var(--border-color);
+    position: relative;
+}
+
+.progress-node.active {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+}
+
+.progress-node.completed {
+    border-color: var(--primary-color);
+    background: var(--white);
+}
+
+.node-label {
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 0.875rem;
+    color: var(--text-light);
+}
+
+.logistics-detail {
+    margin-top: 48px;
+}
+
+/* 信息列表 */
+.info-list {
+    display: grid;
+    gap: 16px;
+}
+
+.info-item {
+    display: flex;
+    gap: 8px;
+}
+
+.info-label {
+    color: var(--text-light);
+    min-width: 80px;
+}
+
+/* 商品列表 */
+.product-list {
+    margin-bottom: 24px;
+}
+
+.product-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.product-item:last-child {
+    border-bottom: none;
+}
+
+.product-image {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--border-radius-sm);
+    object-fit: cover;
+}
+
+.product-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.product-name {
+    font-weight: 500;
+}
+
+.product-specs {
+    color: var(--text-light);
+    font-size: 0.875rem;
+}
+
+.product-price {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.unit-price {
+    color: var(--text-light);
+    font-size: 0.875rem;
+}
+
+.quantity {
+    color: var(--text-light);
+}
+
+/* 订单汇总 */
+.order-summary {
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.summary-item:last-child {
+    margin-bottom: 0;
+}
+
+.summary-item.total {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+    font-weight: 500;
+}
+
+.summary-item.total span:last-child {
+    color: var(--primary-color);
+    font-size: 1.25rem;
+}
+
+/* 物流时间线 */
+.logistics-timeline {
+    margin-top: 24px;
+}
+
+.timeline-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    position: relative;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 6px;
+    bottom: 0;
+    width: 2px;
+    background: var(--border-color);
+}
+
+.timeline-item:first-child::before {
+    top: 50%;
+}
+
+.timeline-item:last-child::before {
+    bottom: 50%;
+}
+
+.timeline-node {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--border-color);
+    position: relative;
+    z-index: 1;
+}
+
+.timeline-item.active .timeline-node {
+    background: var(--primary-color);
+}
+
+.timeline-content {
+    flex: 1;
+}
+
+.timeline-time {
+    color: var(--text-light);
+    font-size: 0.875rem;
+    margin-bottom: 4px;
+}
+
+.timeline-desc {
+    margin: 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .detail-card {
+        padding: 16px;
+    }
+
+    .status-header {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .status-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .status-actions button {
+        flex: 1;
+        min-width: 120px;
+    }
+
+    .product-image {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    .info-item {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .info-label {
+        min-width: auto;
+    }
+
+    .product-item {
+        flex-direction: column;
+    }
+
+    .product-image {
+        width: 100%;
+        height: 200px;
+    }
+} 

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品详情 - Fashion Store</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components/navbar.css">
+    <link rel="stylesheet" href="../css/pages/shop.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="navbar-left">
+                <button class="menu-toggle" aria-label="菜单">
+                    <span>男装</span>
+                    <span>女装</span>
+                    <span>配饰</span>
+                </button>
+                <ul class="nav-links">
+                    <li><a href="index.html">首页</a></li>
+                    <li>
+                        <a href="shop.html" class="dropdown-toggle">商品分类</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="shop.html?category=women">女装</a></li>
+                            <li><a href="shop.html?category=men">男装</a></li>
+                            <li><a href="shop.html?category=accessories">配饰</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="about-pages/brand-story.html">品牌故事</a></li>
+                </ul>
+            </div>
+            
+            <div class="navbar-center">
+                <a href="index.html" class="logo">
+                    <img src="../public/images/icons/logo.png" alt="FASHION" class="logo-img">
+                </a>
+            </div>
+            
+            <div class="navbar-right">
+                <div class="user-status">
+                    <!-- 用户状态将由JS动态生成 -->
+                </div>
+                <div class="nav-icons">
+                    <a href="shop.html" class="icon-link">
+                        <img src="../public/images/icons/shop.png" alt="购物" class="icon">
+                    </a>
+                    <a href="cart.html" class="icon-link cart-icon">
+                        <img src="../public/images/icons/cart.png" alt="购物车" class="icon">
+                        <span class="cart-badge">0</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="product-detail-container">
+        <!-- 商品画廊 -->
+        <div class="product-gallery">
+            <div class="main-image">
+                <img src="" alt="" id="mainImage">
+                <button class="btn-fullscreen">
+                    <i class="icon-fullscreen"></i>
+                </button>
+            </div>
+            <div class="thumbnails-slider">
+                <button class="slider-arrow prev">
+                    <i class="icon-arrow-left"></i>
+                </button>
+                <div class="thumbnails-track">
+                    <!-- 缩略图将动态加载 -->
+                </div>
+                <button class="slider-arrow next">
+                    <i class="icon-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 商品信息 -->
+        <div class="product-info">
+            <div class="product-header">
+                <h1 class="product-title"></h1>
+                <div class="social-actions">
+                    <button class="btn-share">
+                        <i class="icon-share"></i>
+                        <span>分享</span>
+                    </button>
+                    <button class="btn-favorite">
+                        <i class="icon-heart"></i>
+                        <span>收藏</span>
+                    </button>
+                </div>
+            </div>
+            <div class="product-price">
+                <span class="current-price"></span>
+                <span class="original-price"></span>
+                <span class="discount-tag"></span>
+            </div>
+
+            <!-- 商品选项 -->
+            <div class="product-options">
+                <!-- 颜色选择 -->
+                <div class="option-group">
+                    <label>颜色</label>
+                    <div class="color-options">
+                        <!-- 颜色选项将动态加载 -->
+                    </div>
+                    <div class="error-message" data-for="color"></div>
+                </div>
+
+                <!-- 尺寸选择 -->
+                <div class="option-group">
+                    <label>尺寸</label>
+                    <div class="size-options">
+                        <!-- 尺寸选项将动态加载 -->
+                    </div>
+                    <div class="error-message" data-for="size"></div>
+                </div>
+
+                <!-- 数量选择 -->
+                <div class="option-group">
+                    <label>数量</label>
+                    <div class="quantity-selector">
+                        <button class="btn-decrease">-</button>
+                        <input type="number" value="1" min="1" max="99">
+                        <button class="btn-increase">+</button>
+                        <span class="stock-info">库存充足</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div class="product-actions">
+                <button class="btn-primary btn-add-cart">
+                    <i class="icon-cart"></i>
+                    <span>加入购物车</span>
+                </button>
+                <a href="checkout.html" class="btn-primary btn-buy-now" id="buyNowBtn">立即购买</a>
+            </div>
+
+            <!-- 服务承诺 -->
+            <div class="service-promises">
+                <div class="promise-item">
+                    <i class="icon-genuine"></i>
+                    <span>正品保证</span>
+                </div>
+                <div class="promise-item">
+                    <i class="icon-shipping"></i>
+                    <span>极速发货</span>
+                </div>
+                <div class="promise-item">
+                    <i class="icon-return"></i>
+                    <span>7天无理由退换</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 商品详情选项卡 -->
+        <div class="product-tabs">
+            <div class="tabs-header">
+                <button class="tab-btn active" data-tab="description">商品详情</button>
+                <button class="tab-btn" data-tab="size">尺寸表</button>
+                <button class="tab-btn" data-tab="reviews">评价(0)</button>
+            </div>
+
+            <div class="tabs-content">
+                <!-- 商品详情 -->
+                <div class="tab-panel active" data-panel="description">
+                    <div class="product-description">
+                        <!-- 详情内容将动态加载 -->
+                    </div>
+                </div>
+
+                <!-- 尺寸表 -->
+                <div class="tab-panel" data-panel="size">
+                    <div class="size-chart">
+                        <!-- 尺寸表将动态加载 -->
+                    </div>
+                </div>
+
+                <!-- 评价 -->
+                <div class="tab-panel" data-panel="reviews">
+                    <div class="reviews-summary">
+                        <div class="rating-overview">
+                            <div class="average-rating">
+                                <span class="rating-score">0.0</span>
+                                <div class="rating-stars"></div>
+                                <span class="total-reviews">(0条评价)</span>
+                            </div>
+                            <div class="rating-bars">
+                                <!-- 评分分布将动态生成 -->
+                            </div>
+                        </div>
+                        <div class="review-filters">
+                            <button class="filter-btn active" data-filter="all">全部</button>
+                            <button class="filter-btn" data-filter="has-image">有图</button>
+                            <button class="filter-btn" data-filter="has-video">有视频</button>
+                        </div>
+                    </div>
+
+                    <div class="reviews-list">
+                        <!-- 评论列表将动态加载 -->
+                    </div>
+
+                    <template id="reviewTemplate">
+                        <div class="review-item">
+                            <div class="review-header">
+                                <div class="reviewer-info">
+                                    <img class="avatar" src="" alt="">
+                                    <div class="reviewer-meta">
+                                        <span class="reviewer-name"></span>
+                                        <div class="rating-stars"></div>
+                                    </div>
+                                </div>
+                                <span class="review-time"></span>
+                            </div>
+                            <div class="review-content">
+                                <p class="review-text"></p>
+                                <div class="review-media">
+                                    <!-- 图片和视频将动态加载 -->
+                                </div>
+                            </div>
+                            <div class="review-footer">
+                                <div class="specs-info">
+                                    <span class="color"></span>
+                                    <span class="size"></span>
+                                </div>
+                                <div class="review-actions">
+                                    <button class="btn-helpful">
+                                        <i class="icon-thumbs-up"></i>
+                                        <span>有帮助</span>
+                                        <span class="count"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <div class="load-more" hidden>
+                        <button class="btn-load-more">
+                            <span>加载更多</span>
+                            <div class="loading-spinner"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 相似商品推荐 -->
+        <div class="similar-products">
+            <h2>相似商品推荐</h2>
+            <div class="products-slider">
+                <button class="slider-arrow prev">
+                    <i class="icon-arrow-left"></i>
+                </button>
+                <div class="products-track">
+                    <!-- 商品将动态加载 -->
+                </div>
+                <button class="slider-arrow next">
+                    <i class="icon-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- 图片查看器模态框 -->
+    <div class="modal" id="imageViewer">
+        <div class="modal-content">
+            <button class="btn-close">×</button>
+            <div class="viewer-container">
+                <button class="viewer-arrow prev">
+                    <i class="icon-arrow-left"></i>
+                </button>
+                <div class="viewer-image">
+                    <img src="" alt="">
+                </div>
+                <button class="viewer-arrow next">
+                    <i class="icon-arrow-right"></i>
+                </button>
+            </div>
+            <div class="viewer-thumbnails">
+                <!-- 缩略图将动态加载 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 加入购物车成功提示 -->
+    <div class="toast-container">
+        <div class="toast-cart-success">
+            <i class="icon-success"></i>
+            <span>已加入购物车</span>
+        </div>
+    </div>
+
+    <!-- 分享模态框 -->
+    <div class="modal" id="shareModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>分享商品</h3>
+                <button class="btn-close">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="share-link">
+                    <input type="text" id="shareLink" readonly>
+                    <button class="btn-copy">复制链接</button>
+                </div>
+                <div class="share-platforms">
+                    <button class="share-btn wechat">
+                        <i class="icon-wechat"></i>
+                        <span>微信</span>
+                    </button>
+                    <button class="share-btn weibo">
+                        <i class="icon-weibo"></i>
+                        <span>微博</span>
+                    </button>
+                    <button class="share-btn qzone">
+                        <i class="icon-qzone"></i>
+                        <span>QQ空间</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 分享成功提示 -->
+    <div class="toast-container">
+        <div class="toast-share-success">
+            <i class="icon-success"></i>
+            <span>链接已复制</span>
+        </div>
+    </div>
+
+    <!-- 加载购物车模块 -->
+    <script type="module" src="../js/modules/cart.js"></script>
+    
+    <!-- 加载产品详情模块 -->
+    <script type="module" src="../js/modules/product.js"></script>
+    
+    <!-- 会话管理 -->
+    <script type="module">
+        import { updateNavbarUserStatus } from '../js/modules/auth/session.js';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('产品详情页面加载完成，更新用户状态');
+            updateNavbarUserStatus();
+        });
+    </script>
+</body>
+</html> 

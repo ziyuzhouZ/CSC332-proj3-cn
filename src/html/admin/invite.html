@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>邀请码管理 - Fashion Store 管理后台</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/pages/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 管理员认证拦截器 -->
+    <script src="../../js/api/admin/auth-interceptor.js"></script>
+    <style>
+        .invite-container {
+            padding: 20px;
+        }
+        
+        .invite-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .invite-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .btn-generate {
+            background-color: #1a1a1a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-generate:hover {
+            background-color: #333;
+        }
+        
+        .invite-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .invite-table th, .invite-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .invite-table th {
+            background-color: #f8f8f8;
+            font-weight: 600;
+            color: #333;
+            position: sticky;
+            top: 0;
+        }
+        
+        .invite-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .code-cell {
+            font-family: monospace;
+            background-color: #f5f5f5;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 14px;
+            position: relative;
+        }
+        
+        .copy-btn {
+            background: none;
+            border: none;
+            color: #1a1a1a;
+            cursor: pointer;
+            padding: 2px 8px;
+            font-size: 12px;
+            border-radius: 3px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        
+        .copy-btn:hover {
+            background-color: #eee;
+        }
+        
+        .status-active {
+            color: #4CAF50;
+            font-weight: 600;
+        }
+        
+        .status-used {
+            color: #F44336;
+            font-weight: 600;
+        }
+        
+        .status-expired {
+            color: #9E9E9E;
+            font-weight: 600;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .empty-state p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .error-message, .success-message {
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .error-message {
+            background-color: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #f44336;
+        }
+        
+        .success-message {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #323232;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 4px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transform: translateY(-100px);
+            opacity: 0;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- 侧边栏 -->
+        <div class="admin-sidebar">
+            <div class="logo">
+                <img src="../../public/images/icons/logo.png" alt="Fashion Store">
+            </div>
+            
+            <ul class="nav-links">
+                <li>
+                    <a href="dashboard.html">
+                        <span class="icon">📊</span>
+                        <span>控制面板</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="stores.html">
+                        <span class="icon">🏬</span>
+                        <span>门店管理</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="sales.html">
+                        <span class="icon">📈</span>
+                        <span>销售情况</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="orders.html">
+                        <span class="icon">📦</span>
+                        <span>订单管理</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="invite.html">
+                        <span class="icon">🔑</span>
+                        <span>邀请码管理</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="admin-footer">
+                <div class="admin-user">
+                    <span class="admin-avatar">👤</span>
+                    <span class="admin-name" id="adminName">加载中...</span>
+                </div>
+                <button id="logoutBtn" class="logout-btn">退出登录</button>
+            </div>
+        </div>
+        
+        <!-- 主内容区 -->
+        <div class="admin-content">
+            <div class="invite-container">
+                <div class="invite-header">
+                    <h1 class="invite-title">邀请码管理</h1>
+                    <button id="generateBtn" class="btn-generate">
+                        <span>生成新邀请码</span>
+                        <div class="loading-spinner" id="generateSpinner"></div>
+                    </button>
+                </div>
+                
+                <div id="errorMessage" class="error-message"></div>
+                <div id="successMessage" class="success-message"></div>
+                
+                <div id="inviteTableContainer">
+                    <table class="invite-table" id="inviteTable">
+                        <thead>
+                            <tr>
+                                <th>邀请码</th>
+                                <th>创建者</th>
+                                <th>创建时间</th>
+                                <th>状态</th>
+                                <th>使用者</th>
+                                <th>使用时间</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inviteTableBody">
+                            <tr>
+                                <td colspan="6" class="text-center">加载中...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <h3>暂无邀请码</h3>
+                    <p>您可以点击"生成新邀请码"来邀请新的管理员加入</p>
+                    <button id="emptyStateBtn" class="btn-generate">生成新邀请码</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="toast" class="toast"></div>
+    
+    <script src="../../js/modules/auth/api.js"></script>
+    <script src="../../js/modules/auth/session.js"></script>
+    <script type="module">
+        document.addEventListener('DOMContentLoaded', async function() {
+            // 已禁用管理员权限检查
+            // if (!isAdmin()) {
+            //     window.location.href = './login.html';
+            //     return;
+            // }
+            
+            // 绑定退出登录按钮
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('admin_token');
+                localStorage.removeItem('admin_data');
+                window.location.href = 'login.html';
+            });
+            
+            // 假设管理员信息
+            const adminData = JSON.parse(localStorage.getItem('admin_data') || '{"username":"管理员"}');
+            document.getElementById('adminName').textContent = adminData.username || '管理员';
+            
+            const generateBtn = document.getElementById('generateBtn');
+            const emptyStateBtn = document.getElementById('emptyStateBtn');
+            const generateSpinner = document.getElementById('generateSpinner');
+            const inviteTableBody = document.getElementById('inviteTableBody');
+            const inviteTableContainer = document.getElementById('inviteTableContainer');
+            const emptyState = document.getElementById('emptyState');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            const toast = document.getElementById('toast');
+            
+            // 加载邀请码列表
+            function loadInviteCodes() {
+                const token = localStorage.getItem('admin_token');
+                
+                fetch('/api/admin/invites', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('获取邀请码失败');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success && data.invites) {
+                        renderInviteCodes(data.invites);
+                    } else {
+                        showError(data.message || '获取邀请码失败');
+                    }
+                })
+                .catch(error => {
+                    console.error('加载邀请码错误:', error);
+                    showError('加载邀请码时出错，请刷新页面重试');
+                });
+            }
+            
+            // 渲染邀请码列表
+            function renderInviteCodes(invites) {
+                if (invites.length === 0) {
+                    inviteTableContainer.style.display = 'none';
+                    emptyState.style.display = 'block';
+                    return;
+                }
+                
+                inviteTableContainer.style.display = 'block';
+                emptyState.style.display = 'none';
+                
+                inviteTableBody.innerHTML = '';
+                
+                invites.forEach(invite => {
+                    const row = document.createElement('tr');
+                    
+                    // 邀请码单元格
+                    const codeCell = document.createElement('td');
+                    const codeSpan = document.createElement('span');
+                    codeSpan.className = 'code-cell';
+                    codeSpan.textContent = invite.code;
+                    codeCell.appendChild(codeSpan);
+                    
+                    // 如果状态是活跃的，添加复制按钮
+                    if (invite.status === 'active') {
+                        const copyBtn = document.createElement('button');
+                        copyBtn.className = 'copy-btn';
+                        copyBtn.textContent = '复制';
+                        copyBtn.addEventListener('click', () => {
+                            navigator.clipboard.writeText(invite.code)
+                                .then(() => showToast('邀请码已复制到剪贴板'))
+                                .catch(err => console.error('复制失败:', err));
+                        });
+                        codeCell.appendChild(copyBtn);
+                    }
+                    
+                    // 创建者单元格
+                    const creatorCell = document.createElement('td');
+                    creatorCell.textContent = invite.creator_username || '系统';
+                    
+                    // 创建时间单元格
+                    const createdAtCell = document.createElement('td');
+                    createdAtCell.textContent = formatDate(invite.created_at);
+                    
+                    // 状态单元格
+                    const statusCell = document.createElement('td');
+                    let statusClass = '';
+                    let statusText = '';
+                    
+                    switch (invite.status) {
+                        case 'active':
+                            statusClass = 'status-active';
+                            statusText = '可用';
+                            break;
+                        case 'used':
+                            statusClass = 'status-used';
+                            statusText = '已使用';
+                            break;
+                        case 'expired':
+                            statusClass = 'status-expired';
+                            statusText = '已过期';
+                            break;
+                        default:
+                            statusText = invite.status;
+                    }
+                    
+                    statusCell.innerHTML = `<span class="${statusClass}">${statusText}</span>`;
+                    
+                    // 使用者单元格
+                    const usedByCell = document.createElement('td');
+                    usedByCell.textContent = invite.used_by || '-';
+                    
+                    // 使用时间单元格
+                    const usedAtCell = document.createElement('td');
+                    usedAtCell.textContent = invite.used_at ? formatDate(invite.used_at) : '-';
+                    
+                    row.appendChild(codeCell);
+                    row.appendChild(creatorCell);
+                    row.appendChild(createdAtCell);
+                    row.appendChild(statusCell);
+                    row.appendChild(usedByCell);
+                    row.appendChild(usedAtCell);
+                    
+                    inviteTableBody.appendChild(row);
+                });
+            }
+            
+            // 生成邀请码
+            function generateInviteCode() {
+                const token = localStorage.getItem('admin_token');
+                
+                // 显示加载状态
+                generateSpinner.style.display = 'block';
+                hideMessages();
+                
+                fetch('/api/admin/invites/create', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('生成邀请码失败');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    generateSpinner.style.display = 'none';
+                    
+                    if (data.success) {
+                        showSuccess(`邀请码生成成功: ${data.code}`);
+                        loadInviteCodes(); // 重新加载邀请码列表
+                    } else {
+                        showError(data.message || '生成邀请码失败');
+                    }
+                })
+                .catch(error => {
+                    generateSpinner.style.display = 'none';
+                    console.error('生成邀请码错误:', error);
+                    showError('生成邀请码时出错，请稍后重试');
+                });
+            }
+            
+            // 格式化日期
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+            
+            // 显示错误消息
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+            }
+            
+            // 显示成功消息
+            function showSuccess(message) {
+                successMessage.textContent = message;
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+            }
+            
+            // 隐藏消息
+            function hideMessages() {
+                errorMessage.style.display = 'none';
+                successMessage.style.display = 'none';
+            }
+            
+            // 显示弹窗通知
+            function showToast(message) {
+                toast.textContent = message;
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+            
+            // 生成邀请码
+            generateBtn.addEventListener('click', generateInviteCode);
+            if (emptyStateBtn) {
+                emptyStateBtn.addEventListener('click', generateInviteCode);
+            }
+            
+            loadInviteCodes();
+        });
+    </script>
+</body>
+</html> 

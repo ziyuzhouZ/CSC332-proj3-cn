@@ -1,0 +1,306 @@
+/* 用户中心主样式 */
+:root {
+    --nav-width: 240px;
+    --header-height: 60px;
+    --content-padding: 24px;
+    --menu-item-height: 48px;
+    --avatar-size: 80px;
+}
+
+/* 布局容器 */
+.user-center-container {
+    display: flex;
+    gap: 24px;
+    max-width: 1200px;
+    margin: 24px auto;
+    padding: 0 var(--content-padding);
+    min-height: calc(100vh - var(--header-height) - 48px);
+}
+
+/* 左侧导航 */
+.user-nav {
+    flex: 0 0 var(--nav-width);
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    padding: 24px 0;
+    height: fit-content;
+}
+
+/* 用户信息区 */
+.user-info {
+    text-align: center;
+    padding: 0 20px 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.avatar-wrapper {
+    position: relative;
+    width: var(--avatar-size);
+    height: var(--avatar-size);
+    margin: 0 auto 16px;
+}
+
+.user-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.edit-avatar {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: var(--white);
+    border: 2px solid var(--white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.edit-avatar:hover {
+    background: var(--primary-dark);
+    transform: scale(1.1);
+}
+
+.username {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0 0 4px;
+}
+
+.user-level {
+    color: var(--text-light);
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+/* 导航菜单 */
+.user-menu {
+    padding: 12px 0;
+}
+
+.menu-item {
+    height: var(--menu-item-height);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.menu-item i {
+    font-size: 1.25rem;
+    color: var(--text-light);
+    transition: color 0.3s ease;
+}
+
+.menu-item span {
+    flex: 1;
+}
+
+.menu-item:hover {
+    background: var(--bg-light);
+}
+
+.menu-item.active {
+    background: var(--primary-light);
+    color: var(--primary-color);
+}
+
+.menu-item.active i {
+    color: var(--primary-color);
+}
+
+.menu-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--primary-color);
+}
+
+.badge {
+    background: var(--secondary-color);
+    color: var(--white);
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* 主内容区 */
+.user-content {
+    flex: 1;
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    min-height: 600px;
+}
+
+.content-header {
+    padding: var(--content-padding);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.breadcrumb {
+    color: var(--text-light);
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.content-body {
+    padding: var(--content-padding);
+}
+
+/* 加载动画 */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.loading-overlay.visible {
+    display: flex;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* 消息提示 */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.toast {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    padding: 16px 24px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: slideIn 0.3s ease;
+}
+
+.toast.success { border-left: 4px solid var(--success-color); }
+.toast.error { border-left: 4px solid var(--error-color); }
+.toast.warning { border-left: 4px solid var(--warning-color); }
+
+/* 动画 */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .user-center-container {
+        flex-direction: column;
+        padding: 12px;
+    }
+
+    .user-nav {
+        flex: none;
+        width: 100%;
+    }
+
+    .user-menu ul {
+        display: flex;
+        overflow-x: auto;
+        padding: 0 12px;
+    }
+
+    .menu-item {
+        padding: 0 16px;
+        white-space: nowrap;
+    }
+
+    .menu-item.active::before {
+        width: 100%;
+        height: 4px;
+        top: auto;
+        bottom: 0;
+    }
+
+    .content-header {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        text-align: left;
+    }
+
+    .avatar-wrapper {
+        width: 48px;
+        height: 48px;
+        margin: 0;
+    }
+
+    .edit-avatar {
+        width: 24px;
+        height: 24px;
+    }
+
+    .menu-item i {
+        display: none;
+    }
+}

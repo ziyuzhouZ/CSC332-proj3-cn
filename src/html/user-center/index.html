@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户中心</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/components/navbar.css">
+    <link rel="stylesheet" href="../../css/pages/user-center/main.css">
+    <link rel="stylesheet" href="../../css/pages/user-center/profile.css">
+    <link rel="stylesheet" href="../../css/pages/user-center/orders/list.css">
+    <link rel="stylesheet" href="../../css/pages/user-center/orders/detail.css">
+    <style>
+        .logout-button {
+            margin-top: 20px;
+            padding: 12px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        #logout-btn {
+            color: var(--error-color);
+            cursor: pointer;
+        }
+        
+        #logout-btn:hover {
+            background-color: rgba(255, 0, 0, 0.05);
+        }
+        
+        /* 修复内容被导航栏遮挡的问题 */
+        .user-center-container {
+            padding-top: 80px; /* 根据导航栏高度调整 */
+            margin-top: 20px;
+        }
+    </style>
+    
+    <!-- 直接检查登录状态的内联脚本 -->
+    <script>
+        // 页面加载时检查登录状态
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('用户中心页面加载完成，开始检查登录状态');
+            
+            // 获取localStorage中的登录凭证
+            const token = localStorage.getItem('auth_token');
+            const userData = localStorage.getItem('user_data');
+            const expiry = localStorage.getItem('session_expiry');
+            
+            console.log('检查登录状态:', !!token, !!userData, !!expiry);
+            
+            // 如果没有登录或会话过期，重定向到登录页面
+            if (!token || !userData || !expiry || Date.now() > parseInt(expiry)) {
+                console.log('未登录或会话已过期，即将跳转到登录页面');
+                alert('请先登录');
+                window.location.href = '../auth/login.html';
+                return;
+            }
+            
+            try {
+                // 显示用户信息
+                const user = JSON.parse(userData);
+                console.log('当前登录用户:', user);
+                
+                // 更新用户名显示
+                const usernameElement = document.querySelector('.username');
+                if (usernameElement) {
+                    usernameElement.textContent = user.username || '用户';
+                    console.log('已更新用户名显示');
+                }
+                
+                // 直接绑定登出按钮事件，不使用嵌套的DOMContentLoaded
+                const logoutBtn = document.getElementById('logout-btn');
+                if (logoutBtn) {
+                    console.log('找到登出按钮，添加点击事件');
+                    logoutBtn.onclick = function() {
+                        console.log('登出按钮被点击');
+                        if (confirm('确定要退出登录吗？')) {
+                            console.log('用户确认登出');
+                            // 清除本地存储中的会话信息
+                            localStorage.removeItem('auth_token');
+                            localStorage.removeItem('user_data');
+                            localStorage.removeItem('session_expiry');
+                            
+                            console.log('已清除登录信息，即将跳转到首页');
+                            // 跳转到首页
+                            window.location.href = '../index.html';
+                        }
+                    };
+                } else {
+                    console.error('未找到登出按钮元素');
+                }
+            } catch (error) {
+                console.error('解析用户数据出错:', error);
+                alert('会话无效，请重新登录');
+                window.location.href = '../auth/login.html';
+            }
+        });
+    </script>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="navbar-left">
+                <button class="menu-toggle" aria-label="菜单">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-links">
+                    <li><a href="../index.html">首页</a></li>
+                    <li>
+                        <a href="../shop.html" class="dropdown-toggle">商品分类</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../shop.html?category=women">女装</a></li>
+                            <li><a href="../shop.html?category=men">男装</a></li>
+                            <li><a href="../shop.html?category=accessories">配饰</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../about-pages/brand-story.html">品牌故事</a></li>
+                </ul>
+            </div>
+            
+            <div class="navbar-center">
+                <a href="../index.html" class="logo">
+                    <img src="../../public/images/icons/logo.png" alt="FASHION" class="logo-img">
+                </a>
+            </div>
+            
+            <div class="navbar-right">
+                <div class="user-status">
+                    <!-- 用户状态将通过JavaScript动态添加 -->
+                </div>
+                <div class="nav-icons">
+                    <a href="../shop.html" class="icon-link">
+                        <img src="../../public/images/icons/shop.png" alt="购物" class="icon">
+                    </a>
+                    <a href="../cart.html" class="icon-link cart-icon">
+                        <img src="../../public/images/icons/cart.png" alt="购物车" class="icon">
+                        <span class="cart-badge">0</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 用户中心主体 -->
+    <div class="user-center-container">
+        <!-- 左侧导航 -->
+        <div class="user-nav">
+            <div class="user-info">
+                <div class="avatar-wrapper">
+                    <img src="../../public/images/users/default.jpg" alt="用户头像" class="user-avatar">
+                    <button class="edit-avatar">
+                        <i class="icon-edit"></i>
+                    </button>
+                </div>
+                <h3 class="username">用户名</h3>
+                <p class="user-level">普通会员</p>
+            </div>
+            
+            <div class="user-menu">
+                <div class="menu-item active" data-page="profile">
+                    <i class="icon-user"></i>
+                    <span>个人资料</span>
+                </div>
+                <div class="menu-item" data-page="orders">
+                    <i class="icon-shopping-bag"></i>
+                    <span>我的订单</span>
+                </div>
+                <div class="menu-item" data-page="address">
+                    <i class="icon-map-pin"></i>
+                    <span>收货地址</span>
+                </div>
+                <div class="menu-item" data-page="security">
+                    <i class="icon-shield"></i>
+                    <span>账号安全</span>
+                </div>
+                <div class="menu-item" data-page="notifications">
+                    <i class="icon-bell"></i>
+                    <span>消息中心</span>
+                    <span class="badge">2</span>
+                </div>
+                
+                <div class="menu-item">
+                    <a href="../deals.html" style="display: flex; align-items: center; width: 100%; text-decoration: none; color: inherit;">
+                        <i class="icon-gift"></i>
+                        <span>限时优惠</span>
+                        <span class="badge" style="background-color: #ff6b6b;">新</span>
+                    </a>
+                </div>
+                
+                <div class="logout-button">
+                    <div class="menu-item" id="logout-btn">
+                        <i class="icon-log-out"></i>
+                        <span>退出登录</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 主内容区 -->
+        <div class="user-content">
+            <div class="content-header">
+                <h1 class="page-title">个人资料</h1>
+                <div class="breadcrumb">
+                    <span>个人中心</span>
+                    <i class="icon-arrow-right"></i>
+                    <span>个人资料</span>
+                </div>
+            </div>
+            
+            <div class="content-body" id="contentArea">
+                <!-- 内容将通过JavaScript动态加载 -->
+                <div class="loading-spinner"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 加载动画 -->
+    <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+    
+    <!-- 消息提示容器 -->
+    <div class="toast-container"></div>
+
+    <!-- 业务模块 -->
+    <script type="module" src="../../js/modules/cart.js"></script>
+    <script type="module" src="../../js/modules/user/router.js"></script>
+    <script type="module" src="../../js/modules/user/api.js"></script>
+    <script type="module" src="../../js/modules/user/form.js"></script>
+    <script type="module" src="../../js/modules/user/profile.js"></script>
+    <script type="module" src="../../js/modules/user/orders.js"></script>
+    <script type="module" src="../../js/modules/user/order-detail.js"></script>
+    
+    <!-- 会话管理 -->
+    <script type="module">
+        import { updateNavbarUserStatus } from '../../js/modules/auth/session.js';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('用户中心页面加载完成，更新导航状态');
+            updateNavbarUserStatus();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品保养 - Fashion Store</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/components/navbar.css">
+    <link rel="stylesheet" href="../../css/pages/about.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="navbar-left">
+                <button class="menu-toggle" aria-label="菜单">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-links">
+                    <li><a href="../index.html">首页</a></li>
+                    <li><a href="../shop.html">商品</a></li>
+                    <li class="active"><a href="brand-story.html">关于</a></li>
+                </ul>
+            </div>
+            
+            <div class="navbar-center">
+                <a href="../index.html" class="logo">FASHION</a>
+            </div>
+            
+            <div class="navbar-right">
+                <div class="nav-icons">
+                    <a href="../user-center.html" class="icon-link">
+                        <img src="../../public/images/icons/user.svg" alt="个人中心" class="icon">
+                    </a>
+                    <a href="#" class="icon-link cart-icon">
+                        <img src="../../public/images/icons/cart.svg" alt="购物车" class="icon">
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="about-container">
+        <h1 class="page-title">商品保养指南</h1>
+        <div class="content-wrapper">
+            <div class="care-tabs">
+                <a href="#cotton" class="care-tab">棉质面料</a>
+                <a href="#wool" class="care-tab">羊毛面料</a>
+                <a href="#silk" class="care-tab">丝绸面料</a>
+            </div>
+
+            <div id="cotton" class="care-content">
+                <div class="care-steps">
+                    <div class="care-step">
+                        <svg class="step-icon" viewBox="0 0 24 24">
+                            <path d="M3 6l3 15h12l3-15H3zm18-4v2H3V2h18z" fill="currentColor"/>
+                        </svg>
+                        <h3>水洗温度</h3>
+                        <p>建议使用30-40℃的温水手洗或机洗</p>
+                    </div>
+                    <div class="care-step">
+                        <svg class="step-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z" fill="currentColor"/>
+                        </svg>
+                        <h3>洗涤方式</h3>
+                        <p>选择温和洗涤模式，避免用力搓洗</p>
+                    </div>
+                    <div class="care-step">
+                        <svg class="step-icon" viewBox="0 0 24 24">
+                            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12z" fill="currentColor"/>
+                        </svg>
+                        <h3>晾晒方法</h3>
+                        <p>自然阴干，避免阳光直射</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="wool" class="care-content">
+                <div class="care-steps">
+                    <div class="care-step">
+                        <svg class="step-icon" viewBox="0 0 24 24">
+                            <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z" fill="currentColor"/>
+                        </svg>
+                        <h3>清洗频率</h3>
+                        <p>建议每穿着3-4次后进行清洗</p>
+                    </div>
+                    <div class="care-step">
+                        <svg class="step-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z" fill="currentColor"/>
+                        </svg>
+                        <h3>洗涤温度</h3>
+                        <p>使用30℃以下冷水手洗</p>
+                    </div>
+                    <div class="care-step">
+                        <svg class="step-icon" viewBox="0 0 24 24">
+                            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12z" fill="currentColor"/>
+                        </svg>
+                        <h3>存放方式</h3>
+                        <p>平铺晾干，避免悬挂变形</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="silk" class="care-content">
+                <div class="care-steps">
+                    <div class="care-step">
+                        <svg class="step-icon" viewBox="0 0 24 24">
+                            <path d="M3 6l3 15h12l3-15H3zm18-4v2H3V2h18z" fill="currentColor"/>
+                        </svg>
+                        <h3>水温选择</h3>
+                        <p>使用20-25℃的冷水手洗</p>
+                    </div>
+                    <div class="care-step">
+                        <svg class="step-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z" fill="currentColor"/>
+                        </svg>
+                        <h3>清洗方法</h3>
+                        <p>轻柔手洗，避免揉搓</p>
+                    </div>
+                    <div class="care-step">
+                        <svg class="step-icon" viewBox="0 0 24 24">
+                            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12z" fill="currentColor"/>
+                        </svg>
+                        <h3>晾干方式</h3>
+                        <p>阴凉处平铺晾干</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>注意事项</h3>
+                <ul>
+                    <li>首次穿着前建议先进行水洗处理</li>
+                    <li>深色衣物建议单独洗涤，避免染色</li>
+                    <li>请勿使用漂白剂</li>
+                    <li>如有特殊污渍，建议送专业干洗店处理</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>关于我们</h4>
+                <ul>
+                    <li><a href="brand-story.html">品牌故事</a></li>
+                    <li><a href="#">联系我们</a></li>
+                    <li><a href="#">加入我们</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>客户服务</h4>
+                <ul>
+                    <li><a href="product-care.html">商品保养</a></li>
+                    <li><a href="shipping-returns.html">退换政策</a></li>
+                    <li><a href="#">常见问题</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>关注我们</h4>
+                <div class="social-links">
+                    <a href="#" aria-label="微信">微信</a>
+                    <a href="#" aria-label="微博">微博</a>
+                    <a href="#" aria-label="抖音">抖音</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Fashion Store. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="../../js/main.js"></script>
+    <script>
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 默认显示第一个选项卡
+        window.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('.care-content').style.display = 'block';
+        });
+    </script>
+</body>
+</html> 

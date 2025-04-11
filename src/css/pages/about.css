@@ -1,0 +1,413 @@
+/* 关于页面通用样式 */
+.about-container {
+    max-width: 1200px;
+    margin: 100px auto 60px;
+    padding: 0 var(--spacing-md);
+}
+
+.page-title {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    font-family: var(--font-heading);
+}
+
+.content-wrapper {
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: var(--spacing-xl);
+}
+
+/* 品牌故事页面样式 */
+.timeline {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xl);
+    position: relative;
+    padding: var(--spacing-xl) 0;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border-color);
+    transform: translateX(-50%);
+}
+
+.milestone {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xl);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all var(--transition-normal);
+}
+
+.milestone.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.milestone:nth-child(odd) {
+    grid-template-areas: "content image";
+}
+
+.milestone:nth-child(even) {
+    grid-template-areas: "image content";
+}
+
+.milestone-content {
+    grid-area: content;
+    padding: var(--spacing-lg);
+    background: var(--light-gray);
+    border-radius: var(--border-radius-md);
+    position: relative;
+}
+
+.milestone-year {
+    font-size: 1.5rem;
+    color: var(--accent-color);
+    margin-bottom: var(--spacing-sm);
+    font-weight: bold;
+}
+
+.milestone-image {
+    grid-area: image;
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+}
+
+.milestone-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-normal);
+}
+
+.milestone:hover .milestone-image img {
+    transform: scale(1.05);
+}
+
+.founder-quote {
+    margin: var(--spacing-xl) 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--spacing-lg);
+    align-items: center;
+    padding: var(--spacing-xl);
+    background: var(--light-gray);
+    border-radius: var(--border-radius-lg);
+}
+
+.founder-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.founder-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.quote-content {
+    font-style: italic;
+    color: var(--text-color);
+    line-height: 1.8;
+    position: relative;
+    padding-left: var(--spacing-lg);
+}
+
+.quote-content::before {
+    content: '"';
+    position: absolute;
+    left: 0;
+    top: -20px;
+    font-size: 4rem;
+    color: var(--accent-color);
+    opacity: 0.3;
+}
+
+/* 商品保养页面样式 */
+.care-tabs {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xl);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.care-tab {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--text-color);
+    font-weight: 500;
+    position: relative;
+}
+
+.care-tab::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 2px;
+    background: var(--accent-color);
+    transform: scaleX(0);
+    transition: transform var(--transition-fast);
+}
+
+.care-tab:hover::after,
+.care-tab:target::after {
+    transform: scaleX(1);
+}
+
+.care-content {
+    display: none;
+    padding: var(--spacing-lg);
+}
+
+.care-content:target {
+    display: block;
+}
+
+.care-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.care-step {
+    text-align: center;
+    padding: var(--spacing-md);
+}
+
+.step-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto var(--spacing-md);
+}
+
+.warning-box {
+    border: 2px solid var(--secondary-color);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-lg);
+    margin: var(--spacing-xl) 0;
+    background: rgba(231, 76, 60, 0.1);
+}
+
+/* 配送退换页面样式 */
+.process-flow {
+    display: flex;
+    justify-content: space-between;
+    margin: var(--spacing-xl) 0;
+    position: relative;
+}
+
+.process-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+}
+
+.process-step::after {
+    content: '';
+    position: absolute;
+    top: 30px;
+    left: 60%;
+    right: -40%;
+    height: 2px;
+    background: var(--border-color);
+}
+
+.process-step:last-child::after {
+    display: none;
+}
+
+.step-number {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-md);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.highlight {
+    background: #fff3cd;
+    padding: 2px 4px;
+    border-radius: 2px;
+}
+
+.return-form-btn {
+    display: inline-block;
+    padding: var(--spacing-md) var(--spacing-xl);
+    background: var(--primary-color);
+    color: var(--white);
+    border-radius: var(--border-radius-md);
+    text-decoration: none;
+    margin-top: var(--spacing-xl);
+    transition: all var(--transition-fast);
+}
+
+.return-form-btn:hover {
+    background: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+/* 可持续发展页面样式 */
+.eco-dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-xl);
+    margin: var(--spacing-xl) 0;
+}
+
+.eco-stat {
+    text-align: center;
+    padding: var(--spacing-lg);
+    background: var(--light-gray);
+    border-radius: var(--border-radius-md);
+}
+
+.stat-number {
+    font-size: 3rem;
+    color: var(--accent-color);
+    font-weight: bold;
+    margin-bottom: var(--spacing-sm);
+}
+
+.partners-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-lg);
+    margin: var(--spacing-xl) 0;
+}
+
+.partner-logo {
+    padding: var(--spacing-md);
+    background: var(--white);
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-fast);
+}
+
+.partner-logo:hover {
+    transform: translateY(-5px);
+}
+
+.eco-checklist {
+    list-style: none;
+    padding: 0;
+}
+
+.eco-checklist li {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.eco-checklist li::before {
+    content: '✓';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--accent-color);
+    color: var(--white);
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 992px) {
+    .timeline::before {
+        left: 0;
+    }
+
+    .milestone {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+
+    .milestone:nth-child(odd),
+    .milestone:nth-child(even) {
+        grid-template-areas: 
+            "image"
+            "content";
+    }
+
+    .process-flow {
+        flex-direction: column;
+        gap: var(--spacing-xl);
+    }
+
+    .process-step::after {
+        top: auto;
+        bottom: -30px;
+        left: 50%;
+        right: auto;
+        width: 2px;
+        height: 30px;
+        transform: translateX(-50%);
+    }
+
+    .eco-dashboard {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-container {
+        margin: 80px auto 40px;
+    }
+
+    .page-title {
+        font-size: 2rem;
+    }
+
+    .content-wrapper {
+        padding: var(--spacing-lg);
+    }
+
+    .founder-quote {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .founder-avatar {
+        margin: 0 auto;
+    }
+
+    .care-tabs {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 576px) {
+    .milestone-content {
+        padding: var(--spacing-md);
+    }
+
+    .partners-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+} 

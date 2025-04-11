@@ -1,0 +1,184 @@
+/* 支付页面样式 */
+.payment-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* 支付卡片 */
+.payment-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    padding: 24px;
+}
+
+.payment-card h3 {
+    margin: 0 0 16px;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+/* 订单信息 */
+.info-list {
+    display: grid;
+    gap: 16px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info-label {
+    color: var(--text-light);
+}
+
+.info-item.total {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+.info-item.total .payment-total {
+    color: var(--primary-color);
+}
+
+/* 支付方式 */
+.methods-list {
+    display: grid;
+    gap: 16px;
+}
+
+.method-item {
+    cursor: pointer;
+    position: relative;
+}
+
+.method-item input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+
+.method-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+}
+
+.method-content img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.method-item input[type="radio"]:checked + .method-content {
+    border-color: var(--primary-color);
+    background: var(--primary-light);
+}
+
+/* 支付按钮 */
+.payment-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+}
+
+/* 二维码模态框 */
+.qrcode-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 24px;
+}
+
+#qrcodeImage {
+    width: 200px;
+    height: 200px;
+    background: var(--white);
+    padding: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+}
+
+.amount {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.payment-tips {
+    text-align: center;
+    color: var(--text-light);
+}
+
+.payment-tips .payment-method-name {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.expire-tip {
+    margin-top: 8px;
+    font-size: 0.875rem;
+}
+
+/* 支付结果 */
+.result-icon {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.result-icon i {
+    font-size: 48px;
+    color: var(--success-color);
+}
+
+.result-title {
+    text-align: center;
+    margin: 0 0 8px;
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+.result-desc {
+    text-align: center;
+    color: var(--text-light);
+    margin: 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .payment-container {
+        padding: 16px;
+    }
+
+    .payment-card {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .payment-actions {
+        flex-direction: column;
+    }
+
+    .payment-actions button {
+        width: 100%;
+    }
+
+    #qrcodeImage {
+        width: 160px;
+        height: 160px;
+    }
+} 

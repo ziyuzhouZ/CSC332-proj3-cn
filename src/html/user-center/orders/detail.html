@@ -1,0 +1,155 @@
+<!-- 订单详情页面 -->
+<div class="order-detail-container">
+    <!-- 订单状态卡片 -->
+    <div class="detail-card status-card">
+        <div class="status-header">
+            <div class="status-info">
+                <i class="icon-status"></i>
+                <div class="status-text">
+                    <h3>订单状态</h3>
+                    <p class="status-desc"></p>
+                </div>
+            </div>
+            <div class="status-actions">
+                <!-- 操作按钮将根据订单状态动态显示 -->
+            </div>
+        </div>
+        
+        <!-- 物流进度 -->
+        <div class="logistics-progress" hidden>
+            <div class="progress-track">
+                <div class="progress-bar"></div>
+                <div class="progress-nodes">
+                    <!-- 物流节点将动态生成 -->
+                </div>
+            </div>
+            <div class="logistics-detail">
+                <!-- 物流详情将动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 订单信息卡片 -->
+    <div class="detail-card info-card">
+        <h3>订单信息</h3>
+        <div class="info-list">
+            <div class="info-item">
+                <span class="info-label">订单编号：</span>
+                <span class="order-number"></span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">创建时间：</span>
+                <span class="create-time"></span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">支付方式：</span>
+                <span class="payment-method"></span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">支付时间：</span>
+                <span class="payment-time"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 收货信息卡片 -->
+    <div class="detail-card delivery-card">
+        <h3>收货信息</h3>
+        <div class="info-list">
+            <div class="info-item">
+                <span class="info-label">收货人：</span>
+                <span class="receiver-name"></span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">联系电话：</span>
+                <span class="receiver-phone"></span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">收货地址：</span>
+                <span class="receiver-address"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 商品清单卡片 -->
+    <div class="detail-card products-card">
+        <h3>商品清单</h3>
+        <div class="product-list">
+            <!-- 商品列表将动态生成 -->
+        </div>
+        <div class="order-summary">
+            <div class="summary-item">
+                <span>商品总额</span>
+                <span class="products-total"></span>
+            </div>
+            <div class="summary-item">
+                <span>运费</span>
+                <span class="shipping-fee"></span>
+            </div>
+            <div class="summary-item">
+                <span>优惠金额</span>
+                <span class="discount-amount"></span>
+            </div>
+            <div class="summary-item total">
+                <span>实付款</span>
+                <span class="payment-total"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 取消订单确认框 -->
+<div class="modal" id="cancelModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>取消订单</h3>
+            <button class="btn-close" id="closeCancelModal">×</button>
+        </div>
+        <div class="modal-body">
+            <p>确定要取消该订单吗？取消后无法恢复。</p>
+            <div class="form-group">
+                <label for="cancelReason">取消原因</label>
+                <select id="cancelReason">
+                    <option value="">请选择取消原因</option>
+                    <option value="wrong_info">信息填写错误</option>
+                    <option value="change_mind">改变购买决定</option>
+                    <option value="stock_issue">商品缺货</option>
+                    <option value="other">其他原因</option>
+                </select>
+            </div>
+            <div class="form-group" id="otherReasonGroup" hidden>
+                <label for="otherReason">其他原因</label>
+                <textarea id="otherReason" rows="3" placeholder="请输入取消原因"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" id="cancelCancelBtn">取消</button>
+            <button class="btn-primary" id="confirmCancelBtn">确定</button>
+        </div>
+    </div>
+</div>
+
+<!-- 物流详情模态框 -->
+<div class="modal" id="logisticsModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>物流详情</h3>
+            <button class="btn-close" id="closeLogisticsModal">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="logistics-info">
+                <div class="info-item">
+                    <span class="info-label">物流公司：</span>
+                    <span class="company-name"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">运单编号：</span>
+                    <span class="tracking-number"></span>
+                </div>
+            </div>
+            <div class="logistics-timeline">
+                <!-- 物流时间线将动态生成 -->
+            </div>
+        </div>
+    </div>
+</div>

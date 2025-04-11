@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>门店管理 - Fashion Store</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/pages/admin.css">
+    <script src="../../js/api/admin/auth-interceptor.js"></script>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- 侧边栏 -->
+        <div class="admin-sidebar">
+            <div class="logo">
+                <img src="../../public/images/icons/logo.png" alt="Fashion Store">
+            </div>
+            <ul>
+                <li><a href="dashboard.html"><i class="icon-dashboard"></i> 控制面板</a></li>
+                <li class="active"><a href="stores.html"><i class="icon-store"></i> 门店管理</a></li>
+                <li><a href="sales.html"><i class="icon-chart"></i> 销售情况</a></li>
+                <li><a href="orders.html"><i class="icon-orders"></i> 订单管理</a></li>
+                <div class="divider"></div>
+                <li><a href="../index.html"><i class="icon-storefront"></i> 访问前台</a></li>
+                <li><a href="#" id="logoutBtn"><i class="icon-logout"></i> 退出登录</a></li>
+            </ul>
+        </div>
+
+        <!-- 内容区 -->
+        <div class="admin-content">
+            <h1>门店管理</h1>
+            
+            <!-- 筛选区域 -->
+            <div class="filter-bar">
+                <input type="text" id="storeSearch" placeholder="搜索门店名称...">
+                <select id="sortBy">
+                    <option value="name">按名称排序</option>
+                    <option value="inventory">按库存排序</option>
+                    <option value="sales">按销售额排序</option>
+                </select>
+                <button type="button" id="addStoreBtn">添加新门店</button>
+            </div>
+            
+            <!-- 门店列表 -->
+            <div class="admin-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>门店名称</th>
+                            <th>地址</th>
+                            <th>库存总量</th>
+                            <th>今日销售额</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="storesTable">
+                        <tr>
+                            <td colspan="5">加载中...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { getStores } from '../../js/modules/auth/api.js';
+        
+        document.addEventListener('DOMContentLoaded', async function() {
+            // 已禁用管理员权限检查
+            // if (!isAdmin()) {
+            //     window.location.href = './login.html';
+            //     return;
+            // }
+            
+            // 绑定退出登录按钮
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('admin_token');
+                localStorage.removeItem('admin_data');
+                window.location.href = 'login.html';
+            });
+            
+            // 绑定搜索框事件
+            document.getElementById('storeSearch').addEventListener('input', function() {
+                filterStores();
+            });
+            
+            // 绑定排序选择事件
+            document.getElementById('sortBy').addEventListener('change', function() {
+                sortStores();
+            });
+            
+            // 存储所有门店数据
+            let allStores = [];
+            
+            try {
+                // 加载门店数据
+                const storesData = await getStores();
+                if (storesData.success && storesData.stores) {
+                    allStores = storesData.stores;
+                    renderStoresTable(allStores);
+                } else {
+                    throw new Error('无法获取门店数据');
+                }
+            } catch (error) {
+                console.error('加载门店数据出错:', error);
+                document.getElementById('storesTable').innerHTML = `
+                    <tr>
+                        <td colspan="5">加载数据出错，请刷新页面重试</td>
+                    </tr>
+                `;
+            }
+            
+            // 筛选门店
+            function filterStores() {
+                const searchText = document.getElementById('storeSearch').value.toLowerCase();
+                
+                if (!searchText.trim()) {
+                    sortStores(allStores);
+                    return;
+                }
+                
+                const filteredStores = allStores.filter(store => 
+                    store.name.toLowerCase().includes(searchText) || 
+                    store.address.toLowerCase().includes(searchText) ||
+                    store.city.toLowerCase().includes(searchText) ||
+                    store.province.toLowerCase().includes(searchText)
+                );
+                
+                sortStores(filteredStores);
+            }
+            
+            // 排序门店
+            function sortStores(stores = null) {
+                const sortBy = document.getElementById('sortBy').value;
+                const storesToSort = stores || [...allStores];
+                
+                if (sortBy === 'name') {
+                    storesToSort.sort((a, b) => a.name.localeCompare(b.name));
+                } else if (sortBy === 'inventory') {
+                    storesToSort.sort((a, b) => (b.total_inventory || 0) - (a.total_inventory || 0));
+                } else if (sortBy === 'sales') {
+                    storesToSort.sort((a, b) => (b.today_sales || 0) - (a.today_sales || 0));
+                }
+                
+                renderStoresTable(storesToSort);
+            }
+            
+            // 渲染门店表格
+            function renderStoresTable(stores) {
+                const tbody = document.getElementById('storesTable');
+                
+                if (stores.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="5">暂无门店数据</td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                tbody.innerHTML = stores.map(store => {
+                    const address = `${store.address}, ${store.city}, ${store.province} ${store.zipcode}`;
+                    
+                    return `
+                        <tr>
+                            <td>${store.name}</td>
+                            <td>${address}</td>
+                            <td>${store.total_inventory || 0}</td>
+                            <td>¥${(store.today_sales || 0).toLocaleString()}</td>
+                            <td class="actions">
+                                <button onclick="location.href='store-detail.html?id=${store.id}'">
+                                    查看详情
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        });
+    </script>
+</body>
+</html> 

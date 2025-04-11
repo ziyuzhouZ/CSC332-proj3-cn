@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特惠活动 - Fashion Store</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components/navbar.css">
+    <link rel="stylesheet" href="../css/pages/deals.css">
+    <style>
+        /* 修复内容被导航栏遮挡的问题 */
+        .deals-container {
+            padding-top: 80px; /* 根据导航栏高度调整 */
+            margin-top: 20px;
+        }
+        
+        .coupons-section {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="navbar-left">
+                <button class="menu-toggle" aria-label="菜单">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-links">
+                    <li><a href="index.html">首页</a></li>
+                    <li>
+                        <a href="shop.html" class="dropdown-toggle">商品分类</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="shop.html?category=women">女装</a></li>
+                            <li><a href="shop.html?category=men">男装</a></li>
+                            <li><a href="shop.html?category=accessories">配饰</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="about-pages/brand-story.html">品牌故事</a></li>
+                </ul>
+            </div>
+            
+            <div class="navbar-center">
+                <a href="index.html" class="logo">
+                    <img src="../public/images/icons/logo.png" alt="FASHION" class="logo-img">
+                </a>
+            </div>
+            
+            <div class="navbar-right">
+                <div class="user-status">
+                    <!-- 用户状态将由JS动态生成 -->
+                </div>
+                <div class="nav-icons">
+                    <a href="shop.html" class="icon-link">
+                        <img src="../public/images/icons/shop.png" alt="购物" class="icon">
+                    </a>
+                    <a href="cart.html" class="icon-link cart-icon">
+                        <img src="../public/images/icons/cart.png" alt="购物车" class="icon">
+                        <span class="cart-badge">0</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="deals-container">
+        <!-- 促销横幅 -->
+        <div class="promo-banner">
+            <div class="banner-content">
+                <h1>夏季特惠</h1>
+                <p>全场商品低至5折，会员额外95折</p>
+                <div class="countdown">
+                    <span class="countdown-label">距离结束还剩：</span>
+                    <div class="countdown-timer">
+                        <div class="time-unit">
+                            <span class="days">00</span>
+                            <label>天</label>
+                        </div>
+                        <div class="time-unit">
+                            <span class="hours">00</span>
+                            <label>时</label>
+                        </div>
+                        <div class="time-unit">
+                            <span class="minutes">00</span>
+                            <label>分</label>
+                        </div>
+                        <div class="time-unit">
+                            <span class="seconds">00</span>
+                            <label>秒</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 优惠券区域 -->
+        <section class="coupons-section">
+            <h2>领取优惠券</h2>
+            <div class="coupons-grid">
+                <div class="coupon-card">
+                    <div class="coupon-amount">
+                        <span class="currency">¥</span>
+                        <span class="amount">50</span>
+                    </div>
+                    <div class="coupon-info">
+                        <p class="condition">满299可用</p>
+                        <p class="validity">有效期至：2024-12-31</p>
+                    </div>
+                    <button class="btn-get-coupon">立即领取</button>
+                    <div class="member-tag">会员专享</div>
+                </div>
+                <!-- 更多优惠券将通过JavaScript动态添加 -->
+            </div>
+        </section>
+
+        <!-- 特惠商品 -->
+        <section class="deals-section">
+            <h2>特惠商品</h2>
+            <div class="deals-grid">
+                <template id="dealProductTemplate">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="" alt="">
+                            <div class="discount-badge">
+                                <span class="discount-amount"></span>
+                                <span class="member-price">会员价</span>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name"></h3>
+                            <div class="product-price">
+                                <span class="current-price"></span>
+                                <span class="original-price"></span>
+                            </div>
+                            <div class="product-points">
+                                <i class="icon-points"></i>
+                                <span>购买可得<span class="points-amount">0</span>积分</span>
+                            </div>
+                        </div>
+                        <button class="btn-buy">立即购买</button>
+                    </div>
+                </template>
+            </div>
+        </section>
+
+        <!-- 积分兑换 -->
+        <section class="points-section">
+            <h2>积分兑换</h2>
+            <div class="points-grid">
+                <template id="pointsProductTemplate">
+                    <div class="points-card">
+                        <div class="product-image">
+                            <img src="" alt="">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name"></h3>
+                            <div class="points-price">
+                                <span class="points-amount"></span>
+                                <span>积分</span>
+                            </div>
+                            <div class="stock-info">
+                                <div class="progress-bar">
+                                    <div class="progress"></div>
+                                </div>
+                                <span class="stock-text">剩余<span class="stock-amount">0</span>件</span>
+                            </div>
+                        </div>
+                        <button class="btn-exchange">立即兑换</button>
+                    </div>
+                </template>
+            </div>
+        </section>
+    </main>
+
+    <!-- 优惠券领取成功提示 -->
+    <div class="toast-success">
+        <i class="icon-success"></i>
+        <span>优惠券领取成功</span>
+    </div>
+
+    <!-- 积分不足提示 -->
+    <div class="modal" id="pointsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>积分不足</h3>
+                <button class="btn-close">×</button>
+            </div>
+            <div class="modal-body">
+                <p>当前积分：<span class="current-points">0</span></p>
+                <p>还差<span class="points-gap">0</span>积分即可兑换</p>
+                <div class="points-tips">
+                    <h4>获取更多积分：</h4>
+                    <ul>
+                        <li>完成订单可获得订单金额1%的积分</li>
+                        <li>评价商品可获得10积分/件</li>
+                        <li>分享商品可获得5积分/次</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary">去购物</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="../js/modules/deals.js"></script>
+</body>
+</html> 

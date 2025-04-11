@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>门店查找器 - 时尚购物网站</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/components/navbar.css">
+  <link rel="stylesheet" href="../css/components/footer.css">
+  <link rel="stylesheet" href="../css/store-locator.css">
+  <meta name="description" content="查找离您最近的门店，获取营业时间和联系方式">
+  <style>
+    /* 用户状态样式 */
+    .user-status {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .login-link, .register-link, .user-link {
+        text-decoration: none;
+        color: #333;
+        font-size: 14px;
+        padding: 5px 10px;
+        transition: color 0.3s;
+    }
+    
+    .login-link:hover, .register-link:hover, .user-link:hover {
+        color: #888;
+    }
+    
+    .user-dropdown {
+        position: relative;
+    }
+
+    /* 解决顶部导航遮挡问题 */
+    .main {
+        padding-top: 80px; /* 根据导航栏高度调整 */
+    }
+
+    /* 美化隐私声明部分 */
+    .privacy-statement {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 30px;
+        margin: 40px 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border-left: 4px solid #0056b3;
+    }
+
+    .privacy-statement h2 {
+        color: #0056b3;
+        font-size: 24px;
+        margin-bottom: 20px;
+        position: relative;
+        padding-bottom: 10px;
+    }
+
+    .privacy-statement h2:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background-color: #0056b3;
+    }
+
+    .privacy-content {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #555;
+    }
+
+    .privacy-content p {
+        margin-bottom: 16px;
+    }
+
+    .privacy-content ul {
+        margin-left: 20px;
+        margin-bottom: 0;
+    }
+
+    .privacy-content li {
+        margin-bottom: 8px;
+        position: relative;
+        padding-left: 20px;
+    }
+
+    .privacy-content li:before {
+        content: '•';
+        position: absolute;
+        left: 0;
+        color: #0056b3;
+        font-weight: bold;
+    }
+
+    /* 页面头部调整 */
+    .page-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .page-header h1 {
+        font-size: 32px;
+        margin-bottom: 10px;
+        color: #2c3e50;
+    }
+
+    .page-header .subtitle {
+        font-size: 18px;
+        color: #7f8c8d;
+    }
+
+    /* 容器调整 */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 页面头部 -->
+  <header class="header">
+    <nav class="navbar">
+      <div class="navbar-left">
+        <button class="menu-toggle" aria-label="菜单">
+          <span>男装</span>
+          <span>女装</span>
+          <span>配饰</span>
+        </button>
+        <ul class="nav-links">
+          <li><a href="index.html">首页</a></li>
+          <li>
+            <a href="shop.html" class="dropdown-toggle">商品分类</a>
+            <ul class="dropdown-menu">
+              <li><a href="shop.html?category=women">女装</a></li>
+              <li><a href="shop.html?category=men">男装</a></li>
+              <li><a href="shop.html?category=accessories">配饰</a></li>
+            </ul>
+          </li>
+          <li><a href="about-pages/brand-story.html">品牌故事</a></li>
+          <li class="active"><a href="store-finder.html">最近门店</a></li>
+        </ul>
+      </div>
+      
+      <div class="navbar-center">
+        <a href="index.html" class="logo">
+          <img src="../public/images/icons/logo.png" alt="FASHION" class="logo-img">
+        </a>
+      </div>
+      
+      <div class="navbar-right">
+        <div class="user-status">
+          <!-- 用户状态将由JS动态生成 -->
+        </div>
+        <div class="nav-icons">
+          <a href="shop.html" class="icon-link">
+            <img src="../public/images/icons/shop.png" alt="购物" class="icon">
+          </a>
+          <a href="cart.html" class="icon-link cart-icon">
+            <img src="../public/images/icons/cart.png" alt="购物车" class="icon">
+            <span class="cart-badge">0</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  
+  <!-- 主要内容 -->
+  <main class="main">
+    <div class="container">
+      <section class="page-header">
+        <h1>查找门店</h1>
+        <p class="subtitle">找到离您最近的门店，获取营业时间和联系方式</p>
+      </section>
+      
+      <!-- 门店定位器容器 -->
+      <section id="store-locator"></section>
+      
+      <!-- 位置隐私声明 -->
+      <section class="privacy-statement">
+        <h2>位置隐私声明</h2>
+        <div class="privacy-content">
+          <p>我们重视并保护您的隐私。在您使用门店查找功能时，我们确保您的位置数据仅用于向您推荐最近的门店，绝不会用于其他任何目的。</p>
+          <p>您的位置信息只在您的设备上临时处理，不会被永久存储在我们的服务器上，也绝不会被分享给第三方机构或广告商。</p>
+          <p>我们尊重您对个人数据的控制权，您可以随时通过以下方式管理您的位置权限：</p>
+          <ul>
+            <li>允许或拒绝位置访问权限</li>
+            <li>选择手动输入您的位置，而非使用自动定位服务</li>
+            <li>随时清除您的浏览器中存储的位置信息</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </main>
+  
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>关于我们</h3>
+        <ul>
+          <li><a href="about-pages/brand-story.html">品牌故事</a></li>
+          <li><a href="about-pages/contact.html">联系我们</a></li>
+          <li><a href="about-pages/careers.html">加入我们</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>帮助中心</h3>
+        <ul>
+          <li><a href="about-pages/shopping-guide.html">购物指南</a></li>
+          <li><a href="about-pages/shipping-returns.html">退换政策</a></li>
+          <li><a href="about-pages/faq.html">常见问题</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>关注我们</h3>
+        <div class="social-links">
+          <a href="https://weixin.qq.com" target="_blank" rel="noopener noreferrer" aria-label="关注我们的微信公众号">微信</a>
+          <a href="https://weibo.com" target="_blank" rel="noopener noreferrer" aria-label="关注我们的微博">微博</a>
+          <a href="https://www.douyin.com" target="_blank" rel="noopener noreferrer" aria-label="关注我们的抖音">抖音</a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h3>商务合作</h3>
+        <ul>
+          <li><a href="about-pages/partners.html">品牌合作</a></li>
+          <li><a href="about-pages/media.html">媒体报道</a></li>
+          <li><a href="about-pages/investors.html">投资者关系</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 Fashion Store. All rights reserved. | 隐私政策 | 用户协议 | 营业执照</p>
+    </div>
+  </footer>
+  
+  <!-- 导入主脚本 -->
+  <script type="module" src="../js/main.js"></script>
+  
+  <!-- 导入门店定位器脚本 -->
+  <script type="module">
+    import { initStoreLocator } from '../js/modules/examples/location-usage.js';
+    
+    // 页面加载完成后初始化门店定位器
+    document.addEventListener('DOMContentLoaded', () => {
+      initStoreLocator('store-locator');
+    });
+  </script>
+  
+  <!-- 用户状态更新脚本 -->
+  <script type="module">
+    import { updateNavbarUserStatus } from '../js/modules/auth/session.js';
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      updateNavbarUserStatus();
+    });
+  </script>
+</body>
+</html> 

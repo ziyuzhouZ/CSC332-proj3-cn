@@ -1,0 +1,106 @@
+<!-- 支付页面 -->
+<div class="payment-container">
+    <!-- 订单信息卡片 -->
+    <div class="payment-card order-info">
+        <h3>订单信息</h3>
+        <div class="info-list">
+            <div class="info-item">
+                <span class="info-label">订单编号：</span>
+                <span class="order-number"></span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">商品金额：</span>
+                <span class="products-total"></span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">运费：</span>
+                <span class="shipping-fee"></span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">优惠金额：</span>
+                <span class="discount-amount"></span>
+            </div>
+            <div class="info-item total">
+                <span class="info-label">应付金额：</span>
+                <span class="payment-total"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 支付方式卡片 -->
+    <div class="payment-card payment-methods">
+        <h3>选择支付方式</h3>
+        <div class="methods-list">
+            <label class="method-item">
+                <input type="radio" name="paymentMethod" value="alipay" checked>
+                <div class="method-content">
+                    <img src="/images/payment/alipay.png" alt="支付宝">
+                    <span>支付宝</span>
+                </div>
+            </label>
+            <label class="method-item">
+                <input type="radio" name="paymentMethod" value="wechat">
+                <div class="method-content">
+                    <img src="/images/payment/wechat.png" alt="微信支付">
+                    <span>微信支付</span>
+                </div>
+            </label>
+            <label class="method-item">
+                <input type="radio" name="paymentMethod" value="unionpay">
+                <div class="method-content">
+                    <img src="/images/payment/unionpay.png" alt="银联支付">
+                    <span>银联支付</span>
+                </div>
+            </label>
+        </div>
+    </div>
+
+    <!-- 支付按钮 -->
+    <div class="payment-actions">
+        <button class="btn-secondary" id="cancelPayment">取消支付</button>
+        <button class="btn-primary" id="confirmPayment">确认支付</button>
+    </div>
+</div>
+
+<!-- 支付二维码模态框 -->
+<div class="modal" id="qrcodeModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>扫码支付</h3>
+            <button class="btn-close" id="closeQrcodeModal">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="qrcode-wrapper">
+                <div id="qrcodeImage"></div>
+                <p class="amount">￥<span class="payment-amount"></span></p>
+            </div>
+            <div class="payment-tips">
+                <p>请使用<span class="payment-method-name"></span>扫描二维码完成支付</p>
+                <p class="expire-tip">二维码有效期为5分钟，请尽快支付</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" id="cancelQrcodePayment">取消支付</button>
+        </div>
+    </div>
+</div>
+
+<!-- 支付结果模态框 -->
+<div class="modal" id="resultModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>支付结果</h3>
+            <button class="btn-close" id="closeResultModal">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="result-icon">
+                <i class="icon-success"></i>
+            </div>
+            <h4 class="result-title">支付成功</h4>
+            <p class="result-desc">您的订单已支付成功，正在处理中</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-primary" id="viewOrder">查看订单</button>
+        </div>
+    </div>
+</div> 

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>结算 - Fashion Store</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components/navbar.css">
+    <link rel="stylesheet" href="../css/pages/checkout.css">
+    <style>
+        /* 修复checkout-container被导航栏遮挡的问题 */
+        .checkout-container {
+            padding-top: 80px; /* 根据导航栏高度调整 */
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="navbar-left">
+                <button class="menu-toggle" aria-label="菜单">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-links">
+                    <li><a href="index.html">首页</a></li>
+                    <li>
+                        <a href="shop.html" class="dropdown-toggle">商品分类</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="shop.html?category=women">女装</a></li>
+                            <li><a href="shop.html?category=men">男装</a></li>
+                            <li><a href="shop.html?category=accessories">配饰</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="about-pages/brand-story.html">品牌故事</a></li>
+                </ul>
+            </div>
+            
+            <div class="navbar-center">
+                <a href="index.html" class="logo">
+                    <img src="../public/images/icons/logo.png" alt="FASHION" class="logo-img">
+                </a>
+            </div>
+            
+            <div class="navbar-right">
+                <div class="user-status">
+                    <!-- 用户状态将由JS动态生成 -->
+                </div>
+                <div class="nav-icons">
+                    <a href="shop.html" class="icon-link">
+                        <img src="../public/images/icons/shop.png" alt="购物" class="icon">
+                    </a>
+                    <a href="cart.html" class="icon-link cart-icon">
+                        <img src="../public/images/icons/cart.png" alt="购物车" class="icon">
+                        <span class="cart-badge">0</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 主要内容 -->
+    <main class="checkout-container">
+        <!-- 结算进度 -->
+        <div class="checkout-progress" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="3">
+            <div class="progress-step active">
+                <div class="step-number">1</div>
+                <div class="step-text">确认订单</div>
+            </div>
+            <div class="progress-step">
+                <div class="step-number">2</div>
+                <div class="step-text">支付</div>
+            </div>
+            <div class="progress-step">
+                <div class="step-number">3</div>
+                <div class="step-text">完成</div>
+            </div>
+        </div>
+
+        <!-- 收货地址 -->
+        <section class="checkout-section" aria-labelledby="address-title">
+            <h2 id="address-title">收货地址</h2>
+            <div class="address-list" role="radiogroup" aria-label="选择收货地址"></div>
+        </section>
+
+        <!-- 商品信息 -->
+        <section class="checkout-section" aria-labelledby="products-title">
+            <h2 id="products-title">商品信息</h2>
+            <div class="products-list" role="list" aria-label="订单商品列表"></div>
+        </section>
+
+        <!-- 优惠券 -->
+        <section class="checkout-section" aria-labelledby="coupons-title">
+            <h2 id="coupons-title">优惠券</h2>
+            <div class="coupon-list" role="list" aria-label="可用优惠券列表"></div>
+        </section>
+
+        <!-- 金额信息 -->
+        <section class="checkout-section" aria-labelledby="amount-title">
+            <h2 id="amount-title">金额详情</h2>
+            <div class="amount-details"></div>
+        </section>
+
+        <!-- 操作按钮 -->
+        <div class="checkout-actions">
+            <a href="cart.html" class="btn-back" aria-label="返回购物车">返回购物车</a>
+            <button class="btn-submit" aria-label="提交订单">提交订单</button>
+        </div>
+    </main>
+
+    <!-- 添加地址弹窗 -->
+    <div id="addressModal" class="modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <h3 id="modal-title">添加新地址</h3>
+            <form id="addressForm">
+                <div class="form-group">
+                    <label for="name">收货人姓名</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">手机号码</label>
+                    <input type="tel" id="phone" name="phone" required pattern="[0-9]{11}">
+                </div>
+                <div class="form-group">
+                    <label for="province">省份</label>
+                    <select id="province" name="province" required></select>
+                </div>
+                <div class="form-group">
+                    <label for="city">城市</label>
+                    <select id="city" name="city" required></select>
+                </div>
+                <div class="form-group">
+                    <label for="district">区县</label>
+                    <select id="district" name="district" required></select>
+                </div>
+                <div class="form-group">
+                    <label for="street">详细地址</label>
+                    <textarea id="street" name="street" required></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel">取消</button>
+                    <button type="submit" class="btn-save">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast 提示 -->
+    <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+    <!-- JavaScript -->
+    <script type="module">
+        import { checkoutManager } from '../js/modules/checkout.js';
+        document.addEventListener('DOMContentLoaded', () => {
+            checkoutManager.init();
+        });
+    </script>
+</body>
+</html> 
